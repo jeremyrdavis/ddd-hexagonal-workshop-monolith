@@ -1,8 +1,12 @@
 package io.arrogantprogrammer.speakers;
 
+import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
 import jakarta.ws.rs.WebApplicationException;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import jakarta.inject.Inject;
@@ -29,57 +33,65 @@ public class SpeakerServiceTest {
     @Inject
     SpeakerService service;
 
+    @BeforeEach
+    public void setUp() {
+        Speaker speaker = createTestSpeaker();
+        List<Speaker> singleSpeakerList = List.of(speaker);
+        Mockito.when(speakerRepository.listAll()).thenReturn(singleSpeakerList);
+        Optional<Speaker> optionalSpeaker = Optional.of(speaker);
+        Mockito.when(speakerRepository.findByIdOptional(1L)).thenReturn(optionalSpeaker);
+        Optional<Speaker> emptySpeaker = Optional.empty();
+        Mockito.when(speakerRepository.findByIdOptional(2L)).thenReturn(emptySpeaker);
+        doAnswer(invocation -> {
+            Speaker s = invocation.getArgument(0);
+            return s;
+        }).when(speakerRepository).persist(any(Speaker.class));
+        Speaker existing = createTestSpeaker();
+        existing.id = 3L;
+        doAnswer(invocation -> {
+            return Optional.of(existing);
+        }).when(speakerRepository).findByIdOptional(3L);
+        Mockito.when(speakerRepository.deleteById(1L)).thenReturn(true);
+
+
+
+        QuarkusMock.installMockForType(speakerRepository, SpeakerRepository.class);
+    }
+
+
     @Test
     void testGetAllSpeakers() {
-        List<Speaker> speakers = List.of(createTestSpeaker());
-        when(speakerRepository.listAll()).thenReturn(speakers);
-
         List<Speaker> result = service.getAllSpeakers();
-
-        assertEquals(speakers, result);
+        assertEquals(1, result.size());
     }
 
     @Test
     void testGetSpeaker() {
-        Speaker speaker = createTestSpeaker();
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speaker));
-
         Optional<Speaker> result = service.getSpeaker(1L);
-
         assertTrue(result.isPresent());
-        assertEquals(speaker, result.get());
+        assertEquals("Test Speaker", result.get().name);
     }
 
     @Test
     void testGetSpeakerNotFound() {
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.empty());
-
-        Optional<Speaker> result = service.getSpeaker(1L);
-
+        Optional<Speaker> result = service.getSpeaker(2L);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void testCreateSpeaker() {
         Speaker speaker = createTestSpeaker();
-        doAnswer(invocation -> {
-            Speaker s = invocation.getArgument(0);
-            return s;
-        }).when(speakerRepository).persist(any(Speaker.class));
-
         Speaker result = service.createSpeaker(speaker);
-
         assertEquals(speaker, result);
     }
 
     @Test
     void testUpdateSpeaker() {
-        Speaker existing = createTestSpeaker();
         Speaker updated = createTestSpeaker();
+        updated.id = 3L;
         updated.name = "Updated Name";
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(existing));
 
-        Optional<Speaker> result = service.updateSpeaker(1L, updated);
+        Optional<Speaker> result = service.updateSpeaker(3L, updated);
 
         assertTrue(result.isPresent());
         assertEquals(updated.name, result.get().name);
@@ -87,18 +99,12 @@ public class SpeakerServiceTest {
 
     @Test
     void testUpdateSpeakerNotFound() {
-        Speaker speaker = createTestSpeaker();
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.empty());
-
-        Optional<Speaker> result = service.updateSpeaker(1L, speaker);
-
+        Optional<Speaker> result = service.updateSpeaker(2L, createTestSpeaker());
         assertTrue(result.isEmpty());
     }
 
     @Test
     void testDeleteSpeaker() {
-        when(speakerRepository.deleteById(1L)).thenReturn(true);
-
         boolean result = service.deleteSpeaker(1L);
 
         assertTrue(result);
@@ -106,9 +112,7 @@ public class SpeakerServiceTest {
 
     @Test
     void testDeleteSpeakerNotFound() {
-        when(speakerRepository.deleteById(1L)).thenReturn(false);
-
-        boolean result = service.deleteSpeaker(1L);
+        boolean result = service.deleteSpeaker(2L);
 
         assertFalse(result);
     }

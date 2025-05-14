@@ -6,6 +6,8 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import io.quarkus.logging.Log;
+
 @ApplicationScoped
 public class SpeakerService {
 
@@ -31,16 +33,31 @@ public class SpeakerService {
 
     @Transactional
     public Optional<Speaker> updateSpeaker(Long id, Speaker speaker) {
-        return speakerRepository.findByIdOptional(id)
-                .map(existing -> {
-                    existing.name = speaker.name;
-                    existing.title = speaker.title;
-                    existing.company = speaker.company;
-                    existing.bio = speaker.bio;
-                    existing.headshot = speaker.headshot;
-                    return existing;
-                });
-    }
+        Optional<Speaker> existing = speakerRepository.findByIdOptional(id);
+        if(existing.isPresent()) {
+            existing.get().name = speaker.name;
+            existing.get().title = speaker.title;
+            existing.get().company = speaker.company;
+            existing.get().bio = speaker.bio;
+            existing.get().headshot = speaker.headshot;
+            Log.debugf("Speaker updated: %s", existing.get());
+            return existing;
+        } else {
+            Log.debugf("Speaker not found: %s", id);
+            return Optional.empty();
+        }
+
+    //     return Optional.of(speakerRepository.findByIdOptional(id)
+    //             .map(existing -> {
+    //                 existing.name = speaker.name;
+    //                 existing.title = speaker.title;
+    //                 existing.company = speaker.company;
+    //                 existing.bio = speaker.bio;
+    //                 existing.headshot = speaker.headshot;
+    //                 return existing;
+    //             })
+    //             .orElse(null));
+     }
 
     @Transactional
     public boolean deleteSpeaker(Long id) {
