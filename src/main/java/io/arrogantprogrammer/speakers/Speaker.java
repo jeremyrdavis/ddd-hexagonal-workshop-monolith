@@ -29,4 +29,17 @@ public class Speaker extends PanacheEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "speaker", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<SocialMedia> socialMedia = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Speaker speaker = (Speaker) o;
+        return id != null && id.equals(speaker.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 } 
