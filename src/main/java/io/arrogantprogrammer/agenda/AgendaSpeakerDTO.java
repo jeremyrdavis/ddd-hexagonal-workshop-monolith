@@ -1,4 +1,4 @@
-package com.conference.agenda;
+package io.arrogantprogrammer.agenda;
 
 public class AgendaSpeakerDTO {
     public String name;

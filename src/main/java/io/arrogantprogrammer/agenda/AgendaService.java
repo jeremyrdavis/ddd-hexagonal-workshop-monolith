@@ -1,4 +1,4 @@
-package com.conference.agenda;
+package io.arrogantprogrammer.agenda;
 
 import com.conference.sessions.Session;
 import com.conference.sessions.SessionRepository;
