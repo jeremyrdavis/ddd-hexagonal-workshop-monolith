@@ -1,4 +1,4 @@
-package com.conference.sessions;
+package io.arrogantprogrammer.sessions;
 
 import io.arrogantprogrammer.speakers.SpeakerDTO;
 import jakarta.validation.constraints.NotBlank;

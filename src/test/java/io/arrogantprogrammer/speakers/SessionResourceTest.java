@@ -1,11 +1,9 @@
 package io.arrogantprogrammer.speakers;
 
-import com.conference.sessions.Session;
 import io.restassured.http.ContentType;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 

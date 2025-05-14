@@ -1,4 +1,4 @@
-package com.conference.sessions;
+package io.arrogantprogrammer.sessions;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;

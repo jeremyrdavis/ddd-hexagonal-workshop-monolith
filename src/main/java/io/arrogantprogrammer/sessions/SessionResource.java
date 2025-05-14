@@ -1,6 +1,5 @@
-package com.conference.sessions;
+package io.arrogantprogrammer.sessions;
 
-import io.arrogantprogrammer.speakers.Speaker;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;

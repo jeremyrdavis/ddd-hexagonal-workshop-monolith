@@ -1,7 +1,5 @@
-package com.conference.sessions;
+package io.arrogantprogrammer.sessions;
 
-import io.arrogantprogrammer.speakers.Speaker;
-import io.arrogantprogrammer.speakers.SpeakerDTO;
 import io.arrogantprogrammer.speakers.SpeakerMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

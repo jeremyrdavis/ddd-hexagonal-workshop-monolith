@@ -5,9 +5,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import java.time.LocalDate;
 import java.util.List;
-import com.conference.sessions.Session;
-import com.conference.sessions.SessionRepository;
-import io.arrogantprogrammer.speakers.Speaker;
 
 @Path("/api/agenda")
 @Produces(MediaType.APPLICATION_JSON)

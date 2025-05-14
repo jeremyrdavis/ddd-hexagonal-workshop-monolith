@@ -1,7 +1,7 @@
 package io.arrogantprogrammer.agenda;
 
-import com.conference.sessions.Session;
-import com.conference.sessions.SessionRepository;
+import io.arrogantprogrammer.sessions.Session;
+import io.arrogantprogrammer.sessions.SessionRepository;
 import io.arrogantprogrammer.speakers.Speaker;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

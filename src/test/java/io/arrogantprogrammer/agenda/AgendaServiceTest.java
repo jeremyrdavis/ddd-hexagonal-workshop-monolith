@@ -1,7 +1,7 @@
 package io.arrogantprogrammer.agenda;
 
-import com.conference.sessions.Session;
-import com.conference.sessions.SessionRepository;
+import io.arrogantprogrammer.sessions.Session;
+import io.arrogantprogrammer.sessions.SessionRepository;
 import io.arrogantprogrammer.speakers.Speaker;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.test.InjectMock;
@@ -9,9 +9,7 @@ import io.quarkus.test.junit.QuarkusMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.emptyArray;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.withSettings;

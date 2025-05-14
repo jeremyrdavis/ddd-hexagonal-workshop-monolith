@@ -1,8 +1,8 @@
 package io.arrogantprogrammer.speakers;
 
-import com.conference.sessions.Session;
-import com.conference.sessions.SessionRepository;
-import com.conference.sessions.SessionService;
+import io.arrogantprogrammer.sessions.Session;
+import io.arrogantprogrammer.sessions.SessionRepository;
+import io.arrogantprogrammer.sessions.SessionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
