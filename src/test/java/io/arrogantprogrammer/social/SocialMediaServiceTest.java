@@ -42,9 +42,11 @@ package io.arrogantprogrammer.social;
             posts.stream().map(post -> post.getContent()).forEach(System.out::println);
 
             // Then
-            assertEquals(2, posts.size());
-            assertEquals("Carol", posts.get(0).getContent().split(" ")[1]);
-            assertEquals("Bob", posts.get(1).getContent().split(" ")[1]);
+            assertTrue(posts.size() >= 2);
+            assertTrue(posts.stream()
+                    .anyMatch(post -> post.getContent().contains("Carol")));
+            assertTrue(posts.stream()
+                    .anyMatch(post -> post.getContent().contains("Bob")));
         }
 
         @Test

@@ -1,15 +1,13 @@
 package io.arrogantprogrammer.social;
 
+import io.quarkus.hibernate.orm.panache.Panache;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "social_posts")
-public class SocialPost {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class SocialPost extends PanacheEntity {
     
     @Column(nullable = false)
     private String content;

@@ -1,11 +1,12 @@
 package io.arrogantprogrammer.social;
 
 import io.arrogantprogrammer.events.AttendeeRegistered;
-import io.smallrye.reactive.messaging.kafka.Record;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.jboss.logging.Logger;
+import io.smallrye.reactive.messaging.kafka.Record;
+
 
 @ApplicationScoped
 public class SocialMediaEventConsumer {
