@@ -1,0 +1,8 @@
+CREATE TABLE sponsors (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    website VARCHAR(255),
+    logo_url VARCHAR(255),
+    sponsorship_level VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+); 
