@@ -1,4 +1,4 @@
-package io.arrogantprogrammer.social;
+package io.arrogantprogrammer.merchandise;
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
@@ -11,7 +11,7 @@ public class KafkaTestResourceLifecycleManager implements QuarkusTestResourceLif
     @Override
     public Map<String, String> start() {
         Map<String, String> env = new HashMap<>();
-        Map<String, String> props1 = InMemoryConnector.switchIncomingChannelsToInMemory("attendee-registrations-catering");
+        Map<String, String> props1 = InMemoryConnector.switchIncomingChannelsToInMemory("attendee-registrations-merchandise");
         env.putAll(props1);
         return env;
     }

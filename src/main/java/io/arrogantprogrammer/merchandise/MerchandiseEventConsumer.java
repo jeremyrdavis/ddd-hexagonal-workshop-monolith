@@ -14,7 +14,7 @@ public class MerchandiseEventConsumer {
     @Inject
     MerchandiseService merchandiseService;
 
-    @Incoming("attendee-registered")
+    @Incoming("attendee-registrations-merchandise")
     @Blocking
     public Uni<Void> consume(Message<String> message) {
         try {
