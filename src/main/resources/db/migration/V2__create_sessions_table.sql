@@ -8,13 +8,13 @@ CREATE TABLE sessions (
     room VARCHAR(255)
 );
 
--- Create junction table for sessions and speakers
+-- Create junction table for sessions and speakerEntities
 CREATE TABLE session_speakers (
     session_id BIGINT NOT NULL,
     speaker_id BIGINT NOT NULL,
     PRIMARY KEY (session_id, speaker_id),
     CONSTRAINT fk_session FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
-    CONSTRAINT fk_speaker FOREIGN KEY (speaker_id) REFERENCES speakers(id) ON DELETE CASCADE
+    CONSTRAINT fk_speaker FOREIGN KEY (speaker_id) REFERENCES speakerEntities(id) ON DELETE CASCADE
 );
 
 -- Indexes for performance

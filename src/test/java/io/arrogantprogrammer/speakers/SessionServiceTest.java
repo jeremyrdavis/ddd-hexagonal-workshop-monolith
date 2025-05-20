@@ -26,19 +26,19 @@ class SessionServiceTest {
     @InjectMocks
     SessionService sessionService;
 
-    Speaker speaker;
+    SpeakerEntity speakerEntity;
     Session session;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        speaker = new Speaker();
-        speaker.id = 1L;
-        speaker.name = "Alice";
+        speakerEntity = new SpeakerEntity();
+        speakerEntity.id = 1L;
+        speakerEntity.name = "Alice";
         session = new Session();
         session.id = 10L;
         session.title = "Session 1";
-        session.speakers = new ArrayList<>();
+        session.speakerEntities = new ArrayList<>();
     }
 
     @Test
@@ -76,21 +76,21 @@ class SessionServiceTest {
     @Test
     void testAddSpeakerToSession() {
         when(sessionRepository.findByIdOptional(10L)).thenReturn(Optional.of(session));
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speaker));
+        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speakerEntity));
         Optional<Session> result = sessionService.addSpeakerToSession(10L, 1L);
         assertTrue(result.isPresent());
-        assertEquals(1, result.get().speakers.size());
-        assertEquals(speaker, result.get().speakers.get(0));
+        assertEquals(1, result.get().speakerEntities.size());
+        assertEquals(speakerEntity, result.get().speakerEntities.get(0));
     }
 
     @Test
     void testRemoveSpeakerFromSession() {
-        session.speakers.add(speaker);
+        session.speakerEntities.add(speakerEntity);
         when(sessionRepository.findByIdOptional(10L)).thenReturn(Optional.of(session));
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speaker));
+        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speakerEntity));
         Optional<Session> result = sessionService.removeSpeakerFromSession(10L, 1L);
         assertTrue(result.isPresent());
-        assertEquals(0, result.get().speakers.size());
+        assertEquals(0, result.get().speakerEntities.size());
     }
 
     @Test

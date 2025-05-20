@@ -1,6 +1,5 @@
 package io.arrogantprogrammer.agenda;
 
-import io.arrogantprogrammer.speakers.Speaker;
 import java.time.LocalDateTime;
 import java.util.List;
 

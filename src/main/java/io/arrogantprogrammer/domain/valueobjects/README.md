@@ -144,9 +144,9 @@ public class Person {
 
 Based on the current codebase, the following concepts could be implemented as Value Objects:
 
-1. **Email**: For attendee and speaker email addresses
-2. **Name**: For attendee and speaker names
-3. **Company**: For attendee and speaker company information
+1. **Email**: For attendee and speakerEntity email addresses
+2. **Name**: For attendee and speakerEntity names
+3. **Company**: For attendee and speakerEntity company information
 4. **TShirtSize**: For attendee t-shirt preferences
 5. **DietaryPreference**: For attendee dietary requirements
 6. **SocialMediaHandle**: For social media information

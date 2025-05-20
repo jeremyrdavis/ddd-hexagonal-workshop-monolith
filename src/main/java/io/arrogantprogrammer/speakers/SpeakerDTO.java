@@ -14,14 +14,14 @@ public class SpeakerDTO {
     public SpeakerDTO() {
     }
 
-    public SpeakerDTO(Speaker speaker) {
-        this.id = speaker.id;
-        this.name = speaker.name;
-        this.title = speaker.title;
-        this.company = speaker.company;
-        this.bio = speaker.bio;
-        this.headshot = speaker.headshot;
-        this.socialMedia = speaker.socialMedia.stream()
+    public SpeakerDTO(SpeakerEntity speakerEntity) {
+        this.id = speakerEntity.id;
+        this.name = speakerEntity.name;
+        this.title = speakerEntity.title;
+        this.company = speakerEntity.company;
+        this.bio = speakerEntity.bio;
+        this.headshot = speakerEntity.headshot;
+        this.socialMedia = speakerEntity.socialMedia.stream()
                 .map(SocialMediaDTO::new)
                 .toList();
     }

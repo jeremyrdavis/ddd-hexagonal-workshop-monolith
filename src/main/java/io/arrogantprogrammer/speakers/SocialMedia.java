@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 public class SocialMedia extends PanacheEntity {
     
     @ManyToOne
-    public Speaker speaker;
+    public SpeakerEntity speakerEntity;
     
     @NotBlank(message = "Platform is required")
     public String platform;

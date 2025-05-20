@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "speakers")
-public class Speaker extends PanacheEntity {
+public class SpeakerEntity extends PanacheEntity {
     
     @NotBlank(message = "Name is required")
     public String name;
@@ -27,15 +27,15 @@ public class Speaker extends PanacheEntity {
     public String headshot;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "speaker", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "speakerEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<SocialMedia> socialMedia = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Speaker speaker = (Speaker) o;
-        return id != null && id.equals(speaker.id);
+        SpeakerEntity speakerEntity = (SpeakerEntity) o;
+        return id != null && id.equals(speakerEntity.id);
     }
 
     @Override

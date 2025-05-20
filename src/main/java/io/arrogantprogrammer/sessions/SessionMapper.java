@@ -23,8 +23,8 @@ public class SessionMapper {
         dto.endTime = session.endTime;
         dto.room = session.room;
         
-        if (session.speakers != null) {
-            dto.speakers = session.speakers.stream()
+        if (session.speakerEntities != null) {
+            dto.speakers = session.speakerEntities.stream()
                 .map(speakerMapper::toDTO)
                 .toList();
         }

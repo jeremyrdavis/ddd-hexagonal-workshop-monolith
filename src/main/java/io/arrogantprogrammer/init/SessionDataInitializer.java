@@ -132,7 +132,7 @@ public class SessionDataInitializer implements DataInitializer {
         session.startTime = startTime;
         session.endTime = endTime;
         session.room = room;
-        session.speakers = speakerIds.stream()
+        session.speakerEntities = speakerIds.stream()
             .map(id -> speakerRepository.findById(id))
             .toList();
         return session;

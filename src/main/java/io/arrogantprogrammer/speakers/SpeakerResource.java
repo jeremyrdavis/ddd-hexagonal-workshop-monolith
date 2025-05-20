@@ -7,9 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import jakarta.validation.Valid;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.ws.rs.ext.ExceptionMapper;
-import jakarta.ws.rs.ext.Provider;
+
 import java.util.Optional;
 
 @Path("/api/speakers")
@@ -37,8 +35,8 @@ public class SpeakerResource {
 
     @POST
     @Transactional
-    public Response createSpeaker(@Valid Speaker speaker) {
-        Speaker created = speakerService.createSpeaker(speaker);
+    public Response createSpeaker(@Valid SpeakerEntity speakerEntity) {
+        SpeakerEntity created = speakerService.createSpeaker(speakerEntity);
         return Response.status(Response.Status.CREATED)
                 .entity(new SpeakerDTO(created))
                 .build();
@@ -47,8 +45,8 @@ public class SpeakerResource {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response updateSpeaker(@PathParam("id") Long id, Speaker speaker) {
-        return speakerService.updateSpeaker(id, speaker)
+    public Response updateSpeaker(@PathParam("id") Long id, SpeakerEntity speakerEntity) {
+        return speakerService.updateSpeaker(id, speakerEntity)
                 .map(updated -> Response.ok(new SpeakerDTO(updated)).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
@@ -89,7 +87,7 @@ public class SpeakerResource {
     @Path("/{id}/social/{socialMediaId}")
     @Transactional
     public Response removeSocialMedia(@PathParam("id") Long id, @PathParam("socialMediaId") Long socialMediaId) {
-        Optional<Speaker> speaker = speakerService.removeSocialMedia(id, socialMediaId);
+        Optional<SpeakerEntity> speaker = speakerService.removeSocialMedia(id, socialMediaId);
         if (speaker.isPresent()) {
             return Response.noContent().build();
         } else {
