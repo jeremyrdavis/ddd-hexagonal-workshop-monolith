@@ -36,9 +36,8 @@ public class SpeakerServiceTest {
     void setUp() {
         // Create a speaker for testing
         speaker = Speaker.create(
-                "John",
-                "Doe",
-                "john.doe@example.com",
+                new Name("John", "Doe"),
+                new Email("johndoe@something.com"),
                 "Speaker bio",
                 "Example Corp",
                 "Developer",
@@ -113,9 +112,8 @@ public class SpeakerServiceTest {
     void updateSpeaker() {
         // Arrange
         Speaker updatedSpeaker = Speaker.create(
-                "Jane",
-                "Smith",
-                "jane.smith@example.com",
+                new Name("Jane", "Smith"),
+                new Email("jane.smith@example.com"),
                 "Updated bio",
                 "New Corp",
                 "Manager",
@@ -140,9 +138,8 @@ public class SpeakerServiceTest {
     void updateSpeakerNotFound() {
         // Arrange
         Speaker updatedSpeaker = Speaker.create(
-                "Jane",
-                "Smith",
-                "jane.smith@example.com",
+                new Name("Jane","Smith"),
+                new Email("jane.smith@example.com"),
                 "Updated bio",
                 "New Corp",
                 "Manager",
@@ -253,7 +250,7 @@ public class SpeakerServiceTest {
         String title = "Tester";
         String photoUrl = "https://example.com/test.jpg";
         
-        Speaker newSpeaker = Speaker.create(firstName, lastName, email, bio, company, title, photoUrl);
+        Speaker newSpeaker = Speaker.create(new Name(firstName, lastName), new Email(email), bio, company, title, photoUrl);
         
         // Act
         Speaker result = speakerService.createSpeaker(firstName, lastName, email, bio, company, title, photoUrl);

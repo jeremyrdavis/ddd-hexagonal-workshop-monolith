@@ -1,5 +1,6 @@
 package io.arrogantprogrammer.cfp;
 
+import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -16,13 +17,10 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ConferenceSessionResource {
-    
+
     @Inject
-    ConferenceSessionService sessionService;
-    
-    @Inject
-    ConferenceSessionMapper sessionMapper;
-    
+    CFPService cfpService;
+
     /**
      * Gets all conference sessions.
      * 
@@ -30,11 +28,9 @@ public class ConferenceSessionResource {
      */
     @GET
     public List<ConferenceSessionDTO> getAllSessions() {
-        return sessionService.getAllSessions().stream()
-                .map(sessionMapper::toDTO)
-                .collect(Collectors.toList());
+        return cfpService.getAllConferenceSessions();
     }
-    
+
     /**
      * Gets a conference session by ID.
      * 
@@ -44,12 +40,11 @@ public class ConferenceSessionResource {
     @GET
     @Path("/{id}")
     public Response getSession(@PathParam("id") Long id) {
-        return sessionService.getSession(id)
-                .map(sessionMapper::toDTO)
+        return cfpService.getSession(id)
                 .map(dto -> Response.ok(dto).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Creates a new conference session.
      * 
@@ -59,13 +54,13 @@ public class ConferenceSessionResource {
     @POST
     @Transactional
     public Response createSession(@Valid ConferenceSessionDTO dto) {
-        ConferenceSession session = sessionMapper.toEntity(dto);
-        ConferenceSession created = sessionService.createSession(session);
+        ConferenceSessionDTO created = cfpService.createSession(dto);
+        Log.debugf("Created session: %s", created);
         return Response.status(Response.Status.CREATED)
-                .entity(sessionMapper.toDTO(created))
+                .entity(created)
                 .build();
     }
-    
+
     /**
      * Updates an existing conference session.
      * 
@@ -77,13 +72,11 @@ public class ConferenceSessionResource {
     @Path("/{id}")
     @Transactional
     public Response updateSession(@PathParam("id") Long id, @Valid ConferenceSessionDTO dto) {
-        ConferenceSession session = sessionMapper.toEntity(dto);
-        return sessionService.updateSession(id, session)
-                .map(sessionMapper::toDTO)
+        return cfpService.updateSession(id, dto)
                 .map(updated -> Response.ok(updated).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Deletes a conference session.
      * 
@@ -94,12 +87,12 @@ public class ConferenceSessionResource {
     @Path("/{id}")
     @Transactional
     public Response deleteSession(@PathParam("id") Long id) {
-        if (sessionService.deleteSession(id)) {
+        if (cfpService.deleteSession(id)) {
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
-    
+
     /**
      * Adds a speaker to a session.
      * 
@@ -111,12 +104,11 @@ public class ConferenceSessionResource {
     @Path("/{id}/speakers/{speakerId}")
     @Transactional
     public Response addSpeakerToSession(@PathParam("id") Long id, @PathParam("speakerId") Long speakerId) {
-        return sessionService.addSpeakerToSession(id, speakerId)
-                .map(sessionMapper::toDTO)
+        return cfpService.addSpeakerToSession(id, speakerId)
                 .map(updated -> Response.ok(updated).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Removes a speaker from a session.
      * 
@@ -128,11 +120,11 @@ public class ConferenceSessionResource {
     @Path("/{id}/speakers/{speakerId}")
     @Transactional
     public Response removeSpeakerFromSession(@PathParam("id") Long id, @PathParam("speakerId") Long speakerId) {
-        return sessionService.removeSpeakerFromSession(id, speakerId)
+        return cfpService.removeSpeakerFromSession(id, speakerId)
                 .map(session -> Response.noContent().build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Accepts a session.
      * 
@@ -143,12 +135,11 @@ public class ConferenceSessionResource {
     @Path("/{id}/accept")
     @Transactional
     public Response acceptSession(@PathParam("id") Long id) {
-        return sessionService.acceptSession(id)
-                .map(sessionMapper::toDTO)
+        return cfpService.acceptSession(id)
                 .map(updated -> Response.ok(updated).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Rejects a session.
      * 
@@ -159,12 +150,11 @@ public class ConferenceSessionResource {
     @Path("/{id}/reject")
     @Transactional
     public Response rejectSession(@PathParam("id") Long id) {
-        return sessionService.rejectSession(id)
-                .map(sessionMapper::toDTO)
+        return cfpService.rejectSession(id)
                 .map(updated -> Response.ok(updated).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Withdraws a session.
      * 
@@ -175,12 +165,11 @@ public class ConferenceSessionResource {
     @Path("/{id}/withdraw")
     @Transactional
     public Response withdrawSession(@PathParam("id") Long id) {
-        return sessionService.withdrawSession(id)
-                .map(sessionMapper::toDTO)
+        return cfpService.withdrawSession(id)
                 .map(updated -> Response.ok(updated).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Gets sessions by status.
      * 
@@ -191,11 +180,9 @@ public class ConferenceSessionResource {
     @Path("/status/{status}")
     public List<ConferenceSessionDTO> getSessionsByStatus(@PathParam("status") String status) {
         ConferenceSession.SessionStatus sessionStatus = ConferenceSession.SessionStatus.valueOf(status.toUpperCase());
-        return sessionService.findSessionsByStatus(sessionStatus).stream()
-                .map(sessionMapper::toDTO)
-                .collect(Collectors.toList());
+        return cfpService.findSessionsByStatus(sessionStatus);
     }
-    
+
     /**
      * Gets sessions by speaker.
      * 
@@ -205,8 +192,6 @@ public class ConferenceSessionResource {
     @GET
     @Path("/speaker/{speakerId}")
     public List<ConferenceSessionDTO> getSessionsBySpeaker(@PathParam("speakerId") Long speakerId) {
-        return sessionService.findSessionsBySpeaker(speakerId).stream()
-                .map(sessionMapper::toDTO)
-                .collect(Collectors.toList());
+        return cfpService.findSessionsBySpeaker(speakerId);
     }
 }

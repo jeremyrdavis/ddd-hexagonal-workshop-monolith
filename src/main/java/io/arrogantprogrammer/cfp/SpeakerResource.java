@@ -16,13 +16,10 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SpeakerResource {
-    
+
     @Inject
-    SpeakerService speakerService;
-    
-    @Inject
-    SpeakerMapper speakerMapper;
-    
+    CFPService cfpService;
+
     /**
      * Gets all speakers.
      * 
@@ -30,11 +27,9 @@ public class SpeakerResource {
      */
     @GET
     public List<SpeakerDTO> getAllSpeakers() {
-        return speakerService.getAllSpeakers().stream()
-                .map(speakerMapper::toDTO)
-                .collect(Collectors.toList());
+        return cfpService.getAllSpeakers();
     }
-    
+
     /**
      * Gets a speaker by ID.
      * 
@@ -44,12 +39,11 @@ public class SpeakerResource {
     @GET
     @Path("/{id}")
     public Response getSpeaker(@PathParam("id") Long id) {
-        return speakerService.getSpeaker(id)
-                .map(speakerMapper::toDTO)
+        return cfpService.getSpeaker(id)
                 .map(dto -> Response.ok(dto).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Creates a new speaker.
      * 
@@ -59,13 +53,12 @@ public class SpeakerResource {
     @POST
     @Transactional
     public Response createSpeaker(@Valid SpeakerDTO dto) {
-        Speaker speaker = speakerMapper.toEntity(dto);
-        Speaker created = speakerService.createSpeaker(speaker);
+        SpeakerDTO created = cfpService.registerSpeaker(dto);
         return Response.status(Response.Status.CREATED)
-                .entity(speakerMapper.toDTO(created))
+                .entity(created)
                 .build();
     }
-    
+
     /**
      * Updates an existing speaker.
      * 
@@ -77,14 +70,11 @@ public class SpeakerResource {
     @Path("/{id}")
     @Transactional
     public Response updateSpeaker(@PathParam("id") Long id, @Valid SpeakerDTO dto) {
-        return speakerService.getSpeaker(id)
-                .map(speaker -> {
-                    Speaker updated = speakerMapper.updateEntityFromDTO(speaker, dto);
-                    return Response.ok(speakerMapper.toDTO(updated)).build();
-                })
+        return cfpService.updateSpeaker(id, dto)
+                .map(updatedSpeaker -> Response.ok(updatedSpeaker).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
-    
+
     /**
      * Deletes a speaker.
      * 
@@ -95,12 +85,12 @@ public class SpeakerResource {
     @Path("/{id}")
     @Transactional
     public Response deleteSpeaker(@PathParam("id") Long id) {
-        if (speakerService.deleteSpeaker(id)) {
+        if (cfpService.deleteSpeaker(id)) {
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
-    
+
     /**
      * Searches for speakers by name.
      * 
@@ -109,12 +99,10 @@ public class SpeakerResource {
      */
     @GET
     @Path("/search")
-    public List<SpeakerDTO> searchSpeakers(@QueryParam("name") String query) {
-        return speakerService.searchByName(query).stream()
-                .map(speakerMapper::toDTO)
-                .collect(Collectors.toList());
+    public List<SpeakerDTO> searchSpeakers(@QueryParam("query") String query) {
+        return cfpService.searchByName(query);
     }
-    
+
     /**
      * Finds speakers by company.
      * 
@@ -124,8 +112,6 @@ public class SpeakerResource {
     @GET
     @Path("/company/{company}")
     public List<SpeakerDTO> getSpeakersByCompany(@PathParam("company") String company) {
-        return speakerService.findByCompany(company).stream()
-                .map(speakerMapper::toDTO)
-                .collect(Collectors.toList());
+        return cfpService.findByCompany(company);
     }
 }

@@ -88,7 +88,6 @@ public class SpeakerService {
             Speaker speaker = speakerOpt.get();
             sessions.forEach(session -> session.removeSpeaker(speaker));
         }
-        
         return speakerRepository.deleteById(id);
     }
     
@@ -137,7 +136,7 @@ public class SpeakerService {
     @Transactional
     public Speaker createSpeaker(String firstName, String lastName, String email, 
                                String bio, String company, String title, String photoUrl) {
-        Speaker speaker = Speaker.create(firstName, lastName, email, bio, company, title, photoUrl);
+        Speaker speaker = Speaker.create(new Name(firstName, lastName), new Email(email), bio, company, title, photoUrl);
         speakerRepository.persist(speaker);
         return speaker;
     }

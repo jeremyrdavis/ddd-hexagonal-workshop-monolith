@@ -67,11 +67,11 @@ public class Speaker {
      * @param photoUrl the URL to the speaker's photo
      * @return a new Speaker instance
      */
-    public static Speaker create(String firstName, String lastName, String email, 
+    public static Speaker create(Name name, Email email,
                                 String bio, String company, String title, String photoUrl) {
         return new Speaker(
-            new Name(firstName, lastName),
-            new Email(email),
+            new Name(name.getFirstName(), name.getLastName()),
+            email,
             bio,
             company,
             title,
