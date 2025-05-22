@@ -1,20 +1,29 @@
 package io.arrogantprogrammer.cfp.persistence;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 /**
  * SessionAbstract value object that encapsulates the abstract for a conference session.
  * This is a Domain-Driven Design value object.
  */
-@Embeddable
+@Entity
 public class SessionAbstractEntity {
+
+    @Id @GeneratedValue
+    private Long id;
     private String title;
     private String summary;
     private String outline;
     private String learningObjectives;
     private String targetAudience;
     private String prerequisites;
+
+    @ManyToOne
+    @JoinColumn(name = "speaker_id", nullable = false)
+    private SpeakerEntity speaker;
+
     
     /**
      * Required by JPA

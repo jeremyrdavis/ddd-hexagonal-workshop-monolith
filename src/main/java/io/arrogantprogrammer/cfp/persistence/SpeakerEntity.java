@@ -3,6 +3,9 @@ package io.arrogantprogrammer.cfp.persistence;
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,7 +32,9 @@ public class SpeakerEntity {
     private String title;
     
     private String photoUrl;
-    
+
+    @OneToMany(mappedBy = "speaker", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SessionAbstractEntity> sessionAbstracts = new ArrayList<>();
     /**
      * Required by JPA
      */

@@ -1,7 +1,7 @@
 package io.arrogantprogrammer.cfp.domain.aggregates;
 
-import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
 import io.arrogantprogrammer.cfp.domain.services.SubmitAbstractCommand;
+import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.sharedkernel.events.AbstractSubmittedEvent;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class SessionAbstractTest {
         );
         SubmitAbstractCommand submitAbstractCommand = new SubmitAbstractCommand(email, sessionAbstractEntity);
 
-        AbstractSubmittedEvent abstractSubmittedEvent = SessionAbstract.submitAbstract(submitAbstractCommand);
+        AbstractSubmittedEvent abstractSubmittedEvent = Speaker.submitAbstract(submitAbstractCommand);
         assertNotNull(abstractSubmittedEvent);
     }
 }

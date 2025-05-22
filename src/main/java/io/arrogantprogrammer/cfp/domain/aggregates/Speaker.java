@@ -40,4 +40,12 @@ public class Speaker {
         return speakerUpdateResult;
     }
 
+    static AbstractSubmittedEvent submitAbstract(SubmitAbstractCommand submitAbstractCommand) {
+        // Logic to handle the submission of an abstract
+        // This is a placeholder for the actual implementation
+
+        return new AbstractSubmittedEvent(submitAbstractCommand.email(), submitAbstractCommand.sessionAbstractEntity().getTitle());
+    }
+
+
 }
