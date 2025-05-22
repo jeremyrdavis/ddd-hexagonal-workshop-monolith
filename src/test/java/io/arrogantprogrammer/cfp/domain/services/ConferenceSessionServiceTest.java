@@ -3,7 +3,7 @@ package io.arrogantprogrammer.cfp.domain.services;
 import io.arrogantprogrammer.cfp.ConferenceSession;
 import io.arrogantprogrammer.cfp.ConferenceSessionDTO;
 import io.arrogantprogrammer.cfp.ConferenceSessionRepository;
-import io.arrogantprogrammer.cfp.SessionAbstract;
+import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -43,7 +43,7 @@ public class ConferenceSessionServiceTest {
 
         // Create a test session
         ConferenceSession testSession = new ConferenceSession(
-                new SessionAbstract(
+                new SessionAbstractEntity(
                         "Test Session",
                         "Test Summary",
                         "Test Outline",
@@ -76,7 +76,7 @@ public class ConferenceSessionServiceTest {
     private List<ConferenceSession> stubConferenceSessionList() {
         return List.of(
                 new ConferenceSession(
-                        new SessionAbstract(
+                        new SessionAbstractEntity(
                                 "The Fellowship of the Ring",
                                 "An introduction to the journey of the Fellowship.",
                                 "Overview of the Fellowship's formation and their quest.",
@@ -89,7 +89,7 @@ public class ConferenceSessionServiceTest {
                         Duration.ofHours(2)
                 ),
                 new ConferenceSession(
-                        new SessionAbstract(
+                        new SessionAbstractEntity(
                                 "The Two Towers",
                                 "Exploring the battles and alliances formed in Middle-earth.",
                                 "Detailed analysis of key battles and character arcs.",
@@ -102,7 +102,7 @@ public class ConferenceSessionServiceTest {
                         Duration.ofHours(3)
                 ),
                 new ConferenceSession(
-                        new SessionAbstract(
+                        new SessionAbstractEntity(
                                 "The Return of the King",
                                 "The conclusion of the epic journey and the rise of Aragorn.",
                                 "Discussion on the final battles and Aragorn's coronation.",
@@ -115,7 +115,7 @@ public class ConferenceSessionServiceTest {
                         Duration.ofHours(1)
                 ),
                 new ConferenceSession(
-                        new SessionAbstract(
+                        new SessionAbstractEntity(
                                 "The Shire: A Peaceful Haven",
                                 "A look into the culture and lifestyle of hobbits.",
                                 "Exploration of the Shire's traditions and daily life.",
@@ -128,7 +128,7 @@ public class ConferenceSessionServiceTest {
                         Duration.ofMinutes(90)
                 ),
                 new ConferenceSession(
-                        new SessionAbstract(
+                        new SessionAbstractEntity(
                                 "The One Ring: A Study in Power",
                                 "An analysis of the One Ring and its influence.",
                                 "Examination of the Ring's creation, power, and corruption.",

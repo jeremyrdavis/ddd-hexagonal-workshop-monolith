@@ -1,4 +1,4 @@
-package io.arrogantprogrammer.cfp;
+package io.arrogantprogrammer.cfp.persistence;
 
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
@@ -8,7 +8,7 @@ import java.util.Objects;
  * This is a Domain-Driven Design value object.
  */
 @Embeddable
-public class SessionAbstract {
+public class SessionAbstractEntity {
     private String title;
     private String summary;
     private String outline;
@@ -19,7 +19,7 @@ public class SessionAbstract {
     /**
      * Required by JPA
      */
-    protected SessionAbstract() {
+    protected SessionAbstractEntity() {
     }
     
     /**
@@ -33,9 +33,9 @@ public class SessionAbstract {
      * @param prerequisites any prerequisites for attendees
      * @throws IllegalArgumentException if the abstract is invalid
      */
-    public SessionAbstract(String title, String summary, String outline, 
-                          String learningObjectives, String targetAudience, 
-                          String prerequisites) {
+    public SessionAbstractEntity(String title, String summary, String outline,
+                                 String learningObjectives, String targetAudience,
+                                 String prerequisites) {
         validate(title, summary);
         this.title = title;
         this.summary = summary;
@@ -128,7 +128,7 @@ public class SessionAbstract {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SessionAbstract that = (SessionAbstract) o;
+        SessionAbstractEntity that = (SessionAbstractEntity) o;
         return Objects.equals(title, that.title) &&
                Objects.equals(summary, that.summary) &&
                Objects.equals(outline, that.outline) &&

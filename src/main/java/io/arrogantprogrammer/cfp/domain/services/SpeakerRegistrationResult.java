@@ -3,5 +3,5 @@ package io.arrogantprogrammer.cfp.domain.services;
 
 import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
 
-public record SpeakerRegistrationResult(SpeakerEntity speakerEntity) {
+public record SpeakerRegistrationResult(SpeakerEntity speakerEntity, SpeakerRegistrationEvent speakerRegistrationEvent) {
 }

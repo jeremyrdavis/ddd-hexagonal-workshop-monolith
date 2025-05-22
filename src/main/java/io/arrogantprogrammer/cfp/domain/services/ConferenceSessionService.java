@@ -3,11 +3,10 @@ package io.arrogantprogrammer.cfp.domain.services;
 import io.arrogantprogrammer.cfp.ConferenceSession;
 import io.arrogantprogrammer.cfp.ConferenceSessionDTO;
 import io.arrogantprogrammer.cfp.ConferenceSessionRepository;
-import io.arrogantprogrammer.cfp.SessionAbstract;
+import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 
 import java.time.Duration;
 import java.util.List;
@@ -50,7 +49,7 @@ public class ConferenceSessionService {
      */
     @Transactional
     public ConferenceSessionDTO createSession(ConferenceSessionDTO session) {
-        SessionAbstract sessionAbstract = new SessionAbstract(
+        SessionAbstractEntity sessionAbstractEntity = new SessionAbstractEntity(
                 session.title(),
                 session.summary(),
                 session.outline(),
@@ -59,7 +58,7 @@ public class ConferenceSessionService {
                 session.prerequisites()
         );
         ConferenceSession conferenceSession = new ConferenceSession(
-                sessionAbstract,
+                sessionAbstractEntity,
                 session.sessionType(),
                 session.sessionLevel(),
                 Duration.ofMinutes(session.durationMinutes())

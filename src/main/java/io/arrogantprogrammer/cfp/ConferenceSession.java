@@ -1,5 +1,6 @@
 package io.arrogantprogrammer.cfp;
 
+import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
 import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
 import jakarta.persistence.*;
 import java.time.Duration;
@@ -19,7 +20,7 @@ public class ConferenceSession {
     private Long id;
     
     @Embedded
-    private SessionAbstract sessionAbstract;
+    private SessionAbstractEntity sessionAbstractEntity;
     
     @Enumerated(EnumType.STRING)
     private SessionType sessionType;
@@ -49,14 +50,14 @@ public class ConferenceSession {
     /**
      * Creates a new ConferenceSession instance.
      * 
-     * @param sessionAbstract the session abstract
+     * @param sessionAbstractEntity the session abstract
      * @param sessionType the type of session
      * @param sessionLevel the level of the session
      * @param duration the duration of the session
      */
-    public ConferenceSession(SessionAbstract sessionAbstract, SessionType sessionType, 
-                            SessionLevel sessionLevel, Duration duration) {
-        this.sessionAbstract = Objects.requireNonNull(sessionAbstract, "Session abstract cannot be null");
+    public ConferenceSession(SessionAbstractEntity sessionAbstractEntity, SessionType sessionType,
+                             SessionLevel sessionLevel, Duration duration) {
+        this.sessionAbstractEntity = Objects.requireNonNull(sessionAbstractEntity, "Session abstract cannot be null");
         this.sessionType = Objects.requireNonNull(sessionType, "Session type cannot be null");
         this.sessionLevel = Objects.requireNonNull(sessionLevel, "Session level cannot be null");
         this.duration = Objects.requireNonNull(duration, "Duration cannot be null");
@@ -77,8 +78,8 @@ public class ConferenceSession {
      * 
      * @return the session abstract
      */
-    public SessionAbstract getSessionAbstract() {
-        return sessionAbstract;
+    public SessionAbstractEntity getSessionAbstract() {
+        return sessionAbstractEntity;
     }
     
     /**
@@ -129,10 +130,10 @@ public class ConferenceSession {
     /**
      * Updates the session abstract.
      * 
-     * @param sessionAbstract the new session abstract
+     * @param sessionAbstractEntity the new session abstract
      */
-    public void updateSessionAbstract(SessionAbstract sessionAbstract) {
-        this.sessionAbstract = Objects.requireNonNull(sessionAbstract, "Session abstract cannot be null");
+    public void updateSessionAbstract(SessionAbstractEntity sessionAbstractEntity) {
+        this.sessionAbstractEntity = Objects.requireNonNull(sessionAbstractEntity, "Session abstract cannot be null");
     }
     
     /**
@@ -234,7 +235,7 @@ public class ConferenceSession {
     public String toString() {
         return "ConferenceSession{" +
                 "id=" + id +
-                ", title='" + (sessionAbstract != null ? sessionAbstract.getTitle() : null) + '\'' +
+                ", title='" + (sessionAbstractEntity != null ? sessionAbstractEntity.getTitle() : null) + '\'' +
                 ", type=" + sessionType +
                 ", level=" + sessionLevel +
                 ", status=" + status +

@@ -1,9 +1,6 @@
 package io.arrogantprogrammer.cfp.domain.services;
 
-        import io.arrogantprogrammer.cfp.ConferenceSession;
-        import io.arrogantprogrammer.cfp.ConferenceSessionDTO;
         import io.arrogantprogrammer.cfp.ConferenceSessionRepository;
-        import io.arrogantprogrammer.cfp.SessionAbstract;
         import io.arrogantprogrammer.cfp.SpeakerDTO;
         import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
         import io.arrogantprogrammer.cfp.persistence.SpeakerRepository;
@@ -16,9 +13,7 @@ package io.arrogantprogrammer.cfp.domain.services;
         import org.junit.jupiter.api.Test;
         import org.mockito.Mockito;
 
-        import java.time.Duration;
         import java.util.List;
-        import java.util.Optional;
 
         import static org.junit.jupiter.api.Assertions.assertEquals;
         import static org.junit.jupiter.api.Assertions.assertNotNull;
