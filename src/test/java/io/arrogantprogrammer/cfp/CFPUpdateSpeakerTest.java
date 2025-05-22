@@ -21,7 +21,7 @@ public class CFPUpdateSpeakerTest {
     @Inject
     CFPService cfpService;
 
-    @Inject
+    @InjectMock
     SpeakerRepository speakerRepository;
 
     Name name = new Name("Frodo", "Baggins");
@@ -33,8 +33,7 @@ public class CFPUpdateSpeakerTest {
 
     @BeforeEach
     void  setup() {
-        SpeakerRepository mockSpeakerRepository = Mockito.mock(speakerRepository);
-        Mockito.when(mockSpeakerRepository.findByIdOptional(Mockito.any())).thenReturn(
+        Mockito.when(speakerRepository.findByIdOptional(Mockito.any())).thenReturn(
         Optional.of(new Speaker(
                 name,
                 email,
@@ -43,7 +42,6 @@ public class CFPUpdateSpeakerTest {
                 title,
                 photoUrl
         )));
-        QuarkusMock.installMockForType(mockSpeakerRepository, SpeakerRepository.class);
     }
 
     @Test
@@ -56,8 +54,7 @@ public class CFPUpdateSpeakerTest {
                 "The Fellowship of the Ring",
                 "Ring Bearer",
                 "http://theshire.uk/frodo.jpg");
-        SpeakerRepository mockSpeakerRepository = Mockito.mock(speakerRepository);
-        Mockito.when(mockSpeakerRepository.findByIdOptional(Mockito.any())).thenReturn(
+        Mockito.when(speakerRepository.findByIdOptional(Mockito.any())).thenReturn(
                 Optional.of(new Speaker(
                         updatedSpeakerDTO.name(),
                         updatedSpeakerDTO.email(),
@@ -66,8 +63,6 @@ public class CFPUpdateSpeakerTest {
                         updatedSpeakerDTO.title(),
                         updatedSpeakerDTO.photoUrl()
                 )));
-        QuarkusMock.installMockForType(mockSpeakerRepository, SpeakerRepository.class);
-
 
         SpeakerDTO result = cfpService.updateSpeaker(237L, updatedSpeakerDTO).get();
         assertNotNull(result);

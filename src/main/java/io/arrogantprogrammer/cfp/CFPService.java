@@ -51,7 +51,7 @@ public class CFPService {
 
     @Transactional
     Optional<SpeakerDTO> updateSpeaker(long l, SpeakerDTO updatedSpeakerDTO) {
-        Speaker speaker = speakerRepository.findById(l);
+        Speaker speaker = speakerRepository.findByIdOptional(l).get();
         if(speaker != null) {
             speaker.updateName(updatedSpeakerDTO.name());
             speaker.updateEmail(updatedSpeakerDTO.email());

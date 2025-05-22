@@ -2,7 +2,9 @@ package io.arrogantprogrammer.cfp;
 
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusMock;
+import io.quarkus.test.junit.QuarkusTest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,13 +16,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ApplicationScoped
+@QuarkusTest
 public class CFPServiceTestFindSpeakersTest {
 
     @Inject
     CFPService cfpService;
 
-    @Inject
+    @InjectMock
     SpeakerRepository speakerRepository;
 
     Name name = new Name("Frodo", "Baggins");
@@ -32,7 +34,6 @@ public class CFPServiceTestFindSpeakersTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.mock(speakerRepository);
         Mockito.when(speakerRepository.findByIdOptional(Mockito.any())).thenReturn(
                Optional.of(new Speaker(
                                 name,
@@ -42,7 +43,6 @@ public class CFPServiceTestFindSpeakersTest {
                                 title,
                                 photoUrl
                         )));
-        QuarkusMock.installMockForType(speakerRepository, SpeakerRepository.class);
     }
 
     @Test
@@ -55,9 +55,9 @@ public class CFPServiceTestFindSpeakersTest {
         SpeakerDTO speakerDTO = result.get();
         assertEquals(name, speakerDTO.name());
         assertEquals(email, speakerDTO.email());
-        assertEquals("Bio", speakerDTO.bio());
-        assertEquals("Company", speakerDTO.company());
-        assertEquals("Title", speakerDTO.title());
-        assertEquals("http://photo.url", speakerDTO.photoUrl());
+        assertEquals(bio, speakerDTO.bio());
+        assertEquals(company, speakerDTO.company());
+        assertEquals(title, speakerDTO.title());
+        assertEquals(photoUrl, speakerDTO.photoUrl());
     }
 }
