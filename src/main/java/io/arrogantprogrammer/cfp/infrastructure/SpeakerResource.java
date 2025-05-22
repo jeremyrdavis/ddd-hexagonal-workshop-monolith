@@ -1,5 +1,6 @@
-package io.arrogantprogrammer.cfp;
+package io.arrogantprogrammer.cfp.infrastructure;
 
+import io.arrogantprogrammer.cfp.SpeakerDTO;
 import io.arrogantprogrammer.cfp.domain.services.CFPService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;

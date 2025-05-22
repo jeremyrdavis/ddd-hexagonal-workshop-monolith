@@ -1,5 +1,7 @@
-package io.arrogantprogrammer.cfp;
+package io.arrogantprogrammer.cfp.infrastructure;
 
+import io.arrogantprogrammer.cfp.ConferenceSession;
+import io.arrogantprogrammer.cfp.ConferenceSessionDTO;
 import io.arrogantprogrammer.cfp.domain.services.CFPService;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
