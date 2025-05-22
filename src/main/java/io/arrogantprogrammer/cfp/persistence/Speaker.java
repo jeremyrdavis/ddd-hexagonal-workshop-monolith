@@ -1,4 +1,4 @@
-package io.arrogantprogrammer.cfp;
+package io.arrogantprogrammer.cfp.persistence;
 
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;

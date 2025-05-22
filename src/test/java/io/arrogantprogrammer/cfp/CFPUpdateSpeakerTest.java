@@ -1,9 +1,11 @@
 package io.arrogantprogrammer.cfp;
 
+import io.arrogantprogrammer.cfp.domain.services.CFPService;
+import io.arrogantprogrammer.cfp.persistence.Speaker;
+import io.arrogantprogrammer.cfp.persistence.SpeakerRepository;
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
 import io.quarkus.test.InjectMock;
-import io.quarkus.test.junit.QuarkusMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;

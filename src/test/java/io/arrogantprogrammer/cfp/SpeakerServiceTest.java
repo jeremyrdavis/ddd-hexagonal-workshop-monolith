@@ -1,5 +1,7 @@
 package io.arrogantprogrammer.cfp;
 
+import io.arrogantprogrammer.cfp.persistence.Speaker;
+import io.arrogantprogrammer.cfp.persistence.SpeakerRepository;
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
 import io.quarkus.test.InjectMock;

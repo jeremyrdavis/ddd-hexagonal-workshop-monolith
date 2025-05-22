@@ -1,5 +1,6 @@
 package io.arrogantprogrammer.cfp;
 
+import io.arrogantprogrammer.cfp.persistence.Speaker;
 import jakarta.persistence.*;
 import java.time.Duration;
 import java.util.ArrayList;

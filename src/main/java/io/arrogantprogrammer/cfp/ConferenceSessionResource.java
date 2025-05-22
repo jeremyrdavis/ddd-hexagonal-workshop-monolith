@@ -1,5 +1,6 @@
 package io.arrogantprogrammer.cfp;
 
+import io.arrogantprogrammer.cfp.domain.services.CFPService;
 import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -8,7 +9,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * REST resource for conference sessions.
