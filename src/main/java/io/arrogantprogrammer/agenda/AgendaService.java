@@ -2,7 +2,7 @@ package io.arrogantprogrammer.agenda;
 
 import io.arrogantprogrammer.sessions.Session;
 import io.arrogantprogrammer.sessions.SessionRepository;
-import io.arrogantprogrammer.speakers.SpeakerEntity;
+import io.arrogantprogrammer.speakers.Speaker;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.time.LocalDate;
@@ -52,11 +52,11 @@ public class AgendaService {
         return item;
     }
 
-    private AgendaSpeakerDTO toSpeakerDTO(SpeakerEntity speakerEntity) {
+    private AgendaSpeakerDTO toSpeakerDTO(Speaker speaker) {
         AgendaSpeakerDTO dto = new AgendaSpeakerDTO();
-        dto.name = speakerEntity.name;
-        dto.title = speakerEntity.title;
-        dto.company = speakerEntity.company;
+        dto.name = speaker.name;
+        dto.title = speaker.title;
+        dto.company = speaker.company;
         return dto;
     }
 

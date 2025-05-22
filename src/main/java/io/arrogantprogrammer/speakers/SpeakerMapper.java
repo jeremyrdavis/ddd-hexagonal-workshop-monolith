@@ -6,21 +6,21 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class SpeakerMapper {
     
-    public SpeakerDTO toDTO(SpeakerEntity speakerEntity) {
-        if (speakerEntity == null) {
+    public SpeakerDTO toDTO(Speaker speaker) {
+        if (speaker == null) {
             return null;
         }
         
         SpeakerDTO dto = new SpeakerDTO();
-        dto.id = speakerEntity.id;
-        dto.name = speakerEntity.name;
-        dto.title = speakerEntity.title;
-        dto.company = speakerEntity.company;
-        dto.bio = speakerEntity.bio;
-        dto.headshot = speakerEntity.headshot;
+        dto.id = speaker.id;
+        dto.name = speaker.name;
+        dto.title = speaker.title;
+        dto.company = speaker.company;
+        dto.bio = speaker.bio;
+        dto.headshot = speaker.headshot;
         
-        if (speakerEntity.socialMedia != null) {
-            dto.socialMedia = speakerEntity.socialMedia.stream()
+        if (speaker.socialMedia != null) {
+            dto.socialMedia = speaker.socialMedia.stream()
                 .map(sm -> {
                     SocialMediaDTO smDto = new SocialMediaDTO();
                     smDto.id = sm.id;
@@ -34,19 +34,19 @@ public class SpeakerMapper {
         return dto;
     }
     
-    public SpeakerEntity toEntity(SpeakerDTO dto) {
+    public Speaker toEntity(SpeakerDTO dto) {
         if (dto == null) {
             return null;
         }
         
-        SpeakerEntity speakerEntity = new SpeakerEntity();
-        speakerEntity.id = dto.id;
-        speakerEntity.name = dto.name;
-        speakerEntity.title = dto.title;
-        speakerEntity.company = dto.company;
-        speakerEntity.bio = dto.bio;
-        speakerEntity.headshot = dto.headshot;
+        Speaker speaker = new Speaker();
+        speaker.id = dto.id;
+        speaker.name = dto.name;
+        speaker.title = dto.title;
+        speaker.company = dto.company;
+        speaker.bio = dto.bio;
+        speaker.headshot = dto.headshot;
         
-        return speakerEntity;
+        return speaker;
     }
 } 

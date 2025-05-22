@@ -1,6 +1,6 @@
 package io.arrogantprogrammer.sessions;
 
-import io.arrogantprogrammer.speakers.SpeakerEntity;
+import io.arrogantprogrammer.speakers.Speaker;
 import io.arrogantprogrammer.speakers.SpeakerRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -50,12 +50,12 @@ public class SessionService {
     @Transactional
     public Optional<Session> addSpeakerToSession(Long sessionId, Long speakerId) {
         Optional<Session> sessionOpt = sessionRepository.findByIdOptional(sessionId);
-        Optional<SpeakerEntity> speakerOpt = speakerRepository.findByIdOptional(speakerId);
+        Optional<Speaker> speakerOpt = speakerRepository.findByIdOptional(speakerId);
         if (sessionOpt.isPresent() && speakerOpt.isPresent()) {
             Session session = sessionOpt.get();
-            SpeakerEntity speakerEntity = speakerOpt.get();
-            if (!session.speakerEntities.contains(speakerEntity)) {
-                session.speakerEntities.add(speakerEntity);
+            Speaker speaker = speakerOpt.get();
+            if (!session.speakerEntities.contains(speaker)) {
+                session.speakerEntities.add(speaker);
             }
             return Optional.of(session);
         }
@@ -65,11 +65,11 @@ public class SessionService {
     @Transactional
     public Optional<Session> removeSpeakerFromSession(Long sessionId, Long speakerId) {
         Optional<Session> sessionOpt = sessionRepository.findByIdOptional(sessionId);
-        Optional<SpeakerEntity> speakerOpt = speakerRepository.findByIdOptional(speakerId);
+        Optional<Speaker> speakerOpt = speakerRepository.findByIdOptional(speakerId);
         if (sessionOpt.isPresent() && speakerOpt.isPresent()) {
             Session session = sessionOpt.get();
-            SpeakerEntity speakerEntity = speakerOpt.get();
-            boolean removed = session.speakerEntities.remove(speakerEntity);
+            Speaker speaker = speakerOpt.get();
+            boolean removed = session.speakerEntities.remove(speaker);
             return removed ? Optional.of(session) : Optional.empty();
         }
         return Optional.empty();

@@ -1,8 +1,12 @@
 package io.arrogantprogrammer.cfp.domain.services;
 
-import io.arrogantprogrammer.cfp.*;
-import io.arrogantprogrammer.cfp.persistence.Speaker;
+import io.arrogantprogrammer.cfp.ConferenceSessionRepository;
+import io.arrogantprogrammer.cfp.SpeakerDTO;
+import io.arrogantprogrammer.cfp.domain.aggregates.Speaker;
 import io.arrogantprogrammer.cfp.persistence.SpeakerRepository;
+import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
+import io.arrogantprogrammer.domain.valueobjects.Email;
+import io.arrogantprogrammer.domain.valueobjects.Name;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -23,15 +27,16 @@ public class CFPService {
 
     @Transactional
     public SpeakerDTO registerSpeaker(SpeakerDTO speakerDTO) {
-        Speaker speaker = Speaker.create(speakerDTO.name(),speakerDTO.email(), speakerDTO.bio(), speakerDTO.company(), speakerDTO.title(), speakerDTO.photoUrl());
-        speakerRepository.persist(speaker);
+        SpeakerRegistrationResult speakerRegistrationResult = Speaker.registerSpeaker(speakerDTO);
+        SpeakerEntity speakerEntity = speakerRegistrationResult.speakerEntity();
+        speakerRepository.persist(speakerEntity);
         return new SpeakerDTO(
-            speaker.getName(),
-            speaker.getEmail(),
-            speaker.getBio(),
-            speaker.getCompany(),
-            speaker.getTitle(),
-            speaker.getPhotoUrl()
+                speakerEntity.getName(),
+                speakerEntity.getEmail(),
+                speakerEntity.getBio(),
+                speakerEntity.getCompany(),
+                speakerEntity.getTitle(),
+                speakerEntity.getPhotoUrl()
         );
     }
 
@@ -53,22 +58,19 @@ public class CFPService {
 
     @Transactional
     public Optional<SpeakerDTO> updateSpeaker(long l, SpeakerDTO updatedSpeakerDTO) {
-        Speaker speaker = speakerRepository.findByIdOptional(l).get();
-        if(speaker != null) {
-            speaker.updateName(updatedSpeakerDTO.name());
-            speaker.updateEmail(updatedSpeakerDTO.email());
-            speaker.updateBio(updatedSpeakerDTO.bio());
-            speaker.updateCompany(updatedSpeakerDTO.company());
-            speaker.updateTitle(updatedSpeakerDTO.title());
-            speaker.updatePhotoUrl(updatedSpeakerDTO.photoUrl());
-            speakerRepository.persist(speaker);
+        SpeakerEntity speakerEntity = speakerRepository.findByIdOptional(l).get();
+        if(speakerEntity != null) {
+            SpeakerUpdateResult speakerUpdateResult = Speaker.updateSpeaker(speakerEntity, updatedSpeakerDTO);
+            SpeakerEntity updatedSpeaker = speakerUpdateResult.speakerEntity();
+            speakerRepository.persist(updatedSpeaker);
             return Optional.of(new SpeakerDTO(
-                    speaker.getName(),
-                    speaker.getEmail(),
-                    speaker.getBio(),
-                    speaker.getCompany(),
-                    speaker.getTitle(),
-                    speaker.getPhotoUrl()));
+                    updatedSpeaker.getName(),
+                    updatedSpeaker.getEmail(),
+                    updatedSpeaker.getBio(),
+                    updatedSpeaker.getCompany(),
+                    updatedSpeaker.getTitle(),
+                    updatedSpeaker.getPhotoUrl()
+            ));
         }
         return Optional.empty();
     }
@@ -118,380 +120,97 @@ public class CFPService {
         }).collect(Collectors.toList());
     }
 
-    public List<ConferenceSessionDTO> getAllConferenceSessions() {
-        return conferenceSessionRepository.streamAll().map(conferenceSession -> {
-            return  new ConferenceSessionDTO(
-                    conferenceSession.getId(),
-                    conferenceSession.getSessionAbstract().getTitle(),
-                    conferenceSession.getSessionAbstract().getSummary(),
-                    conferenceSession.getSessionAbstract().getOutline(),
-                    conferenceSession.getSessionAbstract().getLearningObjectives(),
-                    conferenceSession.getSessionAbstract().getTargetAudience(),
-                    conferenceSession.getSessionAbstract().getPrerequisites(),
-                    conferenceSession.getSessionType(),
-                    conferenceSession.getSessionLevel(),
-                    conferenceSession.getDuration().toMinutes(),
-                    conferenceSession.getStatus().name(),
-                    conferenceSession.getSpeakers().stream().map(speaker -> {
-                        return new SpeakerDTO(
-                                speaker.getName(),
-                                speaker.getEmail(),
-                                speaker.getBio(),
-                                speaker.getCompany(),
-                                speaker.getTitle(),
-                                speaker.getPhotoUrl()
-                        );
-                    }).collect(Collectors.toList()));
-        }).collect(Collectors.toList());
-    }
-
-    public Optional<ConferenceSessionDTO> getSession(Long id) {
-        return conferenceSessionRepository.findByIdOptional(id)
-                .map(session -> new ConferenceSessionDTO(
-                        session.getId(),
-                        session.getSessionAbstract().getTitle(),
-                        session.getSessionAbstract().getSummary(),
-                        session.getSessionAbstract().getOutline(),
-                        session.getSessionAbstract().getLearningObjectives(),
-                        session.getSessionAbstract().getTargetAudience(),
-                        session.getSessionAbstract().getPrerequisites(),
-                        session.getSessionType(),
-                        session.getSessionLevel(),
-                        session.getDuration().toMinutes(),
-                        session.getStatus().name(),
-                        session.getSpeakers().stream().map(speaker -> new SpeakerDTO(
-                                speaker.getName(),
-                                speaker.getEmail(),
-                                speaker.getBio(),
-                                speaker.getCompany(),
-                                speaker.getTitle(),
-                                speaker.getPhotoUrl()
-                        )).collect(Collectors.toList())
-                ));
-    }
-
-@Transactional
-public Optional<ConferenceSessionDTO> updateSession(long id, ConferenceSessionDTO updatedSession) {
-    ConferenceSession existingSession = conferenceSessionRepository.findById(id);
-    if (existingSession != null) {
-        existingSession.updateSessionAbstract(new SessionAbstract(updatedSession.title(), updatedSession.summary(), updatedSession.outline(), updatedSession.learningObjectives(), updatedSession.targetAudience(), updatedSession.prerequisites()));
-        existingSession.updateSessionType(updatedSession.sessionType());
-        existingSession.updateSessionLevel(updatedSession.sessionLevel());
-        existingSession.updateDuration(Duration.ofMinutes(updatedSession.durationMinutes()));
-        existingSession.updateStatus(ConferenceSession.SessionStatus.valueOf(updatedSession.status()));
-
-        conferenceSessionRepository.persist(existingSession);
-
-        return Optional.of(new ConferenceSessionDTO(
-                existingSession.getId(),
-                existingSession.getSessionAbstract().getTitle(),
-                existingSession.getSessionAbstract().getSummary(),
-                existingSession.getSessionAbstract().getOutline(),
-                existingSession.getSessionAbstract().getLearningObjectives(),
-                existingSession.getSessionAbstract().getTargetAudience(),
-                existingSession.getSessionAbstract().getPrerequisites(),
-                existingSession.getSessionType(),
-                existingSession.getSessionLevel(),
-                existingSession.getDuration().toMinutes(),
-                existingSession.getStatus().name(),
-                existingSession.getSpeakers().stream().map(speaker -> new SpeakerDTO(
-                        speaker.getName(),
-                        speaker.getEmail(),
-                        speaker.getBio(),
-                        speaker.getCompany(),
-                        speaker.getTitle(),
-                        speaker.getPhotoUrl()
-                )).collect(Collectors.toList())
-        ));
-    }
-    return Optional.empty();
-}
-
-    public ConferenceSessionDTO createSession(ConferenceSessionDTO dto) {
-        ConferenceSession session = new ConferenceSession(
-                new SessionAbstract(dto.title(), dto.summary(), dto.outline(), dto.learningObjectives(), dto.targetAudience(), dto.prerequisites()),
-                dto.sessionType(),
-                dto.sessionLevel(),
-                Duration.ofMinutes(dto.durationMinutes()));
-        conferenceSessionRepository.persist(session);
-        return new ConferenceSessionDTO(
-                session.getId(),
-                session.getSessionAbstract().getTitle(),
-                session.getSessionAbstract().getSummary(),
-                session.getSessionAbstract().getOutline(),
-                session.getSessionAbstract().getLearningObjectives(),
-                session.getSessionAbstract().getTargetAudience(),
-                session.getSessionAbstract().getPrerequisites(),
-                session.getSessionType(),
-                session.getSessionLevel(),
-                session.getDuration().toMinutes(),
-                session.getStatus().name(),
-                List.of()
-        );
-    }
-
-    public boolean deleteSession(Long id) {
-        if (conferenceSessionRepository.deleteById(id)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Adds a speaker to a session.
-     *
-     * @param sessionId the ID of the session
-     * @param speakerId the ID of the speaker
-     * @return an optional containing the updated session DTO if both session and speaker are found
-     */
-    @Transactional
-    public Optional<ConferenceSessionDTO> addSpeakerToSession(Long sessionId, Long speakerId) {
-        ConferenceSession session = conferenceSessionRepository.findById(sessionId);
-        Speaker speaker = speakerRepository.findById(speakerId);
-
-        if (session != null && speaker != null) {
-            session.addSpeaker(speaker);
-            conferenceSessionRepository.persist(session);
-            return Optional.of(new ConferenceSessionDTO(
-                    session.getId(),
-                    session.getSessionAbstract().getTitle(),
-                    session.getSessionAbstract().getSummary(),
-                    session.getSessionAbstract().getOutline(),
-                    session.getSessionAbstract().getLearningObjectives(),
-                    session.getSessionAbstract().getTargetAudience(),
-                    session.getSessionAbstract().getPrerequisites(),
-                    session.getSessionType(),
-                    session.getSessionLevel(),
-                    session.getDuration().toMinutes(),
-                    session.getStatus().name(),
-                    session.getSpeakers().stream().map(spkr -> new SpeakerDTO(
-                            spkr.getName(),
-                            spkr.getEmail(),
-                            spkr.getBio(),
-                            spkr.getCompany(),
-                            spkr.getTitle(),
-                            spkr.getPhotoUrl()
-                    )).collect(Collectors.toList())
-            ));
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Removes a speaker from a session.
-     *
-     * @param sessionId the ID of the session
-     * @param speakerId the ID of the speaker
-     * @return an optional containing the updated session DTO if both session and speaker are found
-     */
-    @Transactional
-    public Optional<ConferenceSessionDTO> removeSpeakerFromSession(Long sessionId, Long speakerId) {
-        ConferenceSession session = conferenceSessionRepository.findById(sessionId);
-        Speaker speaker = speakerRepository.findById(speakerId);
-
-        if (session != null && speaker != null) {
-            session.removeSpeaker(speaker);
-            conferenceSessionRepository.persist(session);
-            return Optional.of(new ConferenceSessionDTO(
-                    session.getId(),
-                    session.getSessionAbstract().getTitle(),
-                    session.getSessionAbstract().getSummary(),
-                    session.getSessionAbstract().getOutline(),
-                    session.getSessionAbstract().getLearningObjectives(),
-                    session.getSessionAbstract().getTargetAudience(),
-                    session.getSessionAbstract().getPrerequisites(),
-                    session.getSessionType(),
-                    session.getSessionLevel(),
-                    session.getDuration().toMinutes(),
-                    session.getStatus().name(),
-                    session.getSpeakers().stream().map(spkr -> new SpeakerDTO(
-                            spkr.getName(),
-                            spkr.getEmail(),
-                            spkr.getBio(),
-                            spkr.getCompany(),
-                            spkr.getTitle(),
-                            spkr.getPhotoUrl()
-                    )).collect(Collectors.toList())
-            ));
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Accepts a session.
-     *
-     * @param sessionId the ID of the session to accept
-     * @return an optional containing the updated session DTO if the session is found
-     */
-    @Transactional
-    public Optional<ConferenceSessionDTO> acceptSession(Long sessionId) {
-        ConferenceSession session = conferenceSessionRepository.findById(sessionId);
-
-        if (session != null) {
-            session.accept();
-            conferenceSessionRepository.persist(session);
-            return Optional.of(new ConferenceSessionDTO(
-                    session.getId(),
-                    session.getSessionAbstract().getTitle(),
-                    session.getSessionAbstract().getSummary(),
-                    session.getSessionAbstract().getOutline(),
-                    session.getSessionAbstract().getLearningObjectives(),
-                    session.getSessionAbstract().getTargetAudience(),
-                    session.getSessionAbstract().getPrerequisites(),
-                    session.getSessionType(),
-                    session.getSessionLevel(),
-                    session.getDuration().toMinutes(),
-                    session.getStatus().name(),
-                    session.getSpeakers().stream().map(spkr -> new SpeakerDTO(
-                            spkr.getName(),
-                            spkr.getEmail(),
-                            spkr.getBio(),
-                            spkr.getCompany(),
-                            spkr.getTitle(),
-                            spkr.getPhotoUrl()
-                    )).collect(Collectors.toList())
-            ));
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Rejects a session.
-     *
-     * @param sessionId the ID of the session to reject
-     * @return an optional containing the updated session DTO if the session is found
-     */
-    @Transactional
-    public Optional<ConferenceSessionDTO> rejectSession(Long sessionId) {
-        ConferenceSession session = conferenceSessionRepository.findById(sessionId);
-
-        if (session != null) {
-            session.reject();
-            conferenceSessionRepository.persist(session);
-            return Optional.of(new ConferenceSessionDTO(
-                    session.getId(),
-                    session.getSessionAbstract().getTitle(),
-                    session.getSessionAbstract().getSummary(),
-                    session.getSessionAbstract().getOutline(),
-                    session.getSessionAbstract().getLearningObjectives(),
-                    session.getSessionAbstract().getTargetAudience(),
-                    session.getSessionAbstract().getPrerequisites(),
-                    session.getSessionType(),
-                    session.getSessionLevel(),
-                    session.getDuration().toMinutes(),
-                    session.getStatus().name(),
-                    session.getSpeakers().stream().map(spkr -> new SpeakerDTO(
-                            spkr.getName(),
-                            spkr.getEmail(),
-                            spkr.getBio(),
-                            spkr.getCompany(),
-                            spkr.getTitle(),
-                            spkr.getPhotoUrl()
-                    )).collect(Collectors.toList())
-            ));
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Withdraws a session.
-     *
-     * @param sessionId the ID of the session to withdraw
-     * @return an optional containing the updated session DTO if the session is found
-     */
-    @Transactional
-    public Optional<ConferenceSessionDTO> withdrawSession(Long sessionId) {
-        ConferenceSession session = conferenceSessionRepository.findById(sessionId);
-
-        if (session != null) {
-            session.withdraw();
-            conferenceSessionRepository.persist(session);
-            return Optional.of(new ConferenceSessionDTO(
-                    session.getId(),
-                    session.getSessionAbstract().getTitle(),
-                    session.getSessionAbstract().getSummary(),
-                    session.getSessionAbstract().getOutline(),
-                    session.getSessionAbstract().getLearningObjectives(),
-                    session.getSessionAbstract().getTargetAudience(),
-                    session.getSessionAbstract().getPrerequisites(),
-                    session.getSessionType(),
-                    session.getSessionLevel(),
-                    session.getDuration().toMinutes(),
-                    session.getStatus().name(),
-                    session.getSpeakers().stream().map(spkr -> new SpeakerDTO(
-                            spkr.getName(),
-                            spkr.getEmail(),
-                            spkr.getBio(),
-                            spkr.getCompany(),
-                            spkr.getTitle(),
-                            spkr.getPhotoUrl()
-                    )).collect(Collectors.toList())
-            ));
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Finds sessions by status.
-     *
-     * @param status the session status
-     * @return a list of sessions with the given status
-     */
-    public List<ConferenceSessionDTO> findSessionsByStatus(ConferenceSession.SessionStatus status) {
-        return conferenceSessionRepository.findByStatus(status).stream()
-                .map(session -> new ConferenceSessionDTO(
-                        session.getId(),
-                        session.getSessionAbstract().getTitle(),
-                        session.getSessionAbstract().getSummary(),
-                        session.getSessionAbstract().getOutline(),
-                        session.getSessionAbstract().getLearningObjectives(),
-                        session.getSessionAbstract().getTargetAudience(),
-                        session.getSessionAbstract().getPrerequisites(),
-                        session.getSessionType(),
-                        session.getSessionLevel(),
-                        session.getDuration().toMinutes(),
-                        session.getStatus().name(),
-                        session.getSpeakers().stream().map(spkr -> new SpeakerDTO(
-                                spkr.getName(),
-                                spkr.getEmail(),
-                                spkr.getBio(),
-                                spkr.getCompany(),
-                                spkr.getTitle(),
-                                spkr.getPhotoUrl()
-                        )).collect(Collectors.toList())
-                ))
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Finds sessions by speaker.
-     *
-     * @param speakerId the ID of the speaker
-     * @return a list of sessions for the speaker
-     */
-    public List<ConferenceSessionDTO> findSessionsBySpeaker(Long speakerId) {
-        return conferenceSessionRepository.findBySpeakerId(speakerId).stream()
-                .map(session -> new ConferenceSessionDTO(
-                        session.getId(),
-                        session.getSessionAbstract().getTitle(),
-                        session.getSessionAbstract().getSummary(),
-                        session.getSessionAbstract().getOutline(),
-                        session.getSessionAbstract().getLearningObjectives(),
-                        session.getSessionAbstract().getTargetAudience(),
-                        session.getSessionAbstract().getPrerequisites(),
-                        session.getSessionType(),
-                        session.getSessionLevel(),
-                        session.getDuration().toMinutes(),
-                        session.getStatus().name(),
-                        session.getSpeakers().stream().map(spkr -> new SpeakerDTO(
-                                spkr.getName(),
-                                spkr.getEmail(),
-                                spkr.getBio(),
-                                spkr.getCompany(),
-                                spkr.getTitle(),
-                                spkr.getPhotoUrl()
-                        )).collect(Collectors.toList())
-                ))
-                .collect(Collectors.toList());
-    }
+//
+//    public Optional<ConferenceSessionDTO> getSession(Long id) {
+//        return conferenceSessionRepository.findByIdOptional(id)
+//                .map(session -> new ConferenceSessionDTO(
+//                        session.getId(),
+//                        session.getSessionAbstract().getTitle(),
+//                        session.getSessionAbstract().getSummary(),
+//                        session.getSessionAbstract().getOutline(),
+//                        session.getSessionAbstract().getLearningObjectives(),
+//                        session.getSessionAbstract().getTargetAudience(),
+//                        session.getSessionAbstract().getPrerequisites(),
+//                        session.getSessionType(),
+//                        session.getSessionLevel(),
+//                        session.getDuration().toMinutes(),
+//                        session.getStatus().name(),
+//                        session.getSpeakers().stream().map(speaker -> new SpeakerDTO(
+//                                speaker.getName(),
+//                                speaker.getEmail(),
+//                                speaker.getBio(),
+//                                speaker.getCompany(),
+//                                speaker.getTitle(),
+//                                speaker.getPhotoUrl()
+//                        )).collect(Collectors.toList())
+//                ));
+//    }
+//
+//@Transactional
+//public Optional<ConferenceSessionDTO> updateSession(long id, ConferenceSessionDTO updatedSession) {
+//    ConferenceSession existingSession = conferenceSessionRepository.findById(id);
+//    if (existingSession != null) {
+//        existingSession.updateSessionAbstract(new SessionAbstract(updatedSession.title(), updatedSession.summary(), updatedSession.outline(), updatedSession.learningObjectives(), updatedSession.targetAudience(), updatedSession.prerequisites()));
+//        existingSession.updateSessionType(updatedSession.sessionType());
+//        existingSession.updateSessionLevel(updatedSession.sessionLevel());
+//        existingSession.updateDuration(Duration.ofMinutes(updatedSession.durationMinutes()));
+//        existingSession.updateStatus(ConferenceSession.SessionStatus.valueOf(updatedSession.status()));
+//
+//        conferenceSessionRepository.persist(existingSession);
+//
+//        return Optional.of(new ConferenceSessionDTO(
+//                existingSession.getId(),
+//                existingSession.getSessionAbstract().getTitle(),
+//                existingSession.getSessionAbstract().getSummary(),
+//                existingSession.getSessionAbstract().getOutline(),
+//                existingSession.getSessionAbstract().getLearningObjectives(),
+//                existingSession.getSessionAbstract().getTargetAudience(),
+//                existingSession.getSessionAbstract().getPrerequisites(),
+//                existingSession.getSessionType(),
+//                existingSession.getSessionLevel(),
+//                existingSession.getDuration().toMinutes(),
+//                existingSession.getStatus().name(),
+//                existingSession.getSpeakers().stream().map(speaker -> new SpeakerDTO(
+//                        speaker.getName(),
+//                        speaker.getEmail(),
+//                        speaker.getBio(),
+//                        speaker.getCompany(),
+//                        speaker.getTitle(),
+//                        speaker.getPhotoUrl()
+//                )).collect(Collectors.toList())
+//        ));
+//    }
+//    return Optional.empty();
+//}
+//
+//    public ConferenceSessionDTO createSession(ConferenceSessionDTO dto) {
+//        ConferenceSession session = new ConferenceSession(
+//                new SessionAbstract(dto.title(), dto.summary(), dto.outline(), dto.learningObjectives(), dto.targetAudience(), dto.prerequisites()),
+//                dto.sessionType(),
+//                dto.sessionLevel(),
+//                Duration.ofMinutes(dto.durationMinutes()));
+//        conferenceSessionRepository.persist(session);
+//        return new ConferenceSessionDTO(
+//                session.getId(),
+//                session.getSessionAbstract().getTitle(),
+//                session.getSessionAbstract().getSummary(),
+//                session.getSessionAbstract().getOutline(),
+//                session.getSessionAbstract().getLearningObjectives(),
+//                session.getSessionAbstract().getTargetAudience(),
+//                session.getSessionAbstract().getPrerequisites(),
+//                session.getSessionType(),
+//                session.getSessionLevel(),
+//                session.getDuration().toMinutes(),
+//                session.getStatus().name(),
+//                List.of()
+//        );
+//    }
+//
+//    public boolean deleteSession(Long id) {
+//        if (conferenceSessionRepository.deleteById(id)) {
+//            return true;
+//        }
+//        return false;
+//    }
+//
 }

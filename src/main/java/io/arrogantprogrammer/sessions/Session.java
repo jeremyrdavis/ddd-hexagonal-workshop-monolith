@@ -1,6 +1,6 @@
 package io.arrogantprogrammer.sessions;
 
-import io.arrogantprogrammer.speakers.SpeakerEntity;
+import io.arrogantprogrammer.speakers.Speaker;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -29,5 +29,5 @@ public class Session {
         joinColumns = @JoinColumn(name = "session_id"),
         inverseJoinColumns = @JoinColumn(name = "speaker_id")
     )
-    public List<SpeakerEntity> speakerEntities = new ArrayList<>();
+    public List<Speaker> speakerEntities = new ArrayList<>();
 } 

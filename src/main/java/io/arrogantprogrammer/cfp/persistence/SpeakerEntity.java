@@ -11,7 +11,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "cfp_speakers")
-public class Speaker {
+public class SpeakerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,7 +33,7 @@ public class Speaker {
     /**
      * Required by JPA
      */
-    protected Speaker() {
+    public SpeakerEntity() {
     }
     
     /**
@@ -46,7 +46,7 @@ public class Speaker {
      * @param title the speaker's job title
      * @param photoUrl the URL to the speaker's photo
      */
-    public Speaker(Name name, Email email, String bio, String company, String title, String photoUrl) {
+    public SpeakerEntity(Name name, Email email, String bio, String company, String title, String photoUrl) {
         this.name = Objects.requireNonNull(name, "Name cannot be null");
         this.email = Objects.requireNonNull(email, "Email cannot be null");
         this.bio = bio;
@@ -67,9 +67,9 @@ public class Speaker {
      * @param photoUrl the URL to the speaker's photo
      * @return a new Speaker instance
      */
-    public static Speaker create(Name name, Email email,
-                                String bio, String company, String title, String photoUrl) {
-        return new Speaker(
+    public static SpeakerEntity create(Name name, Email email,
+                                       String bio, String company, String title, String photoUrl) {
+        return new SpeakerEntity(
             new Name(name.getFirstName(), name.getLastName()),
             email,
             bio,
@@ -78,6 +78,8 @@ public class Speaker {
             photoUrl
         );
     }
+
+
     
     /**
      * Gets the speaker's ID.
@@ -200,8 +202,8 @@ public class Speaker {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Speaker speaker = (Speaker) o;
-        return Objects.equals(id, speaker.id);
+        SpeakerEntity speakerEntity = (SpeakerEntity) o;
+        return Objects.equals(id, speakerEntity.id);
     }
     
     @Override

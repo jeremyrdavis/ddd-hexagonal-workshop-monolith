@@ -26,15 +26,15 @@ class SessionServiceTest {
     @InjectMocks
     SessionService sessionService;
 
-    SpeakerEntity speakerEntity;
+    Speaker speaker;
     Session session;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        speakerEntity = new SpeakerEntity();
-        speakerEntity.id = 1L;
-        speakerEntity.name = "Alice";
+        speaker = new Speaker();
+        speaker.id = 1L;
+        speaker.name = "Alice";
         session = new Session();
         session.id = 10L;
         session.title = "Session 1";
@@ -76,18 +76,18 @@ class SessionServiceTest {
     @Test
     void testAddSpeakerToSession() {
         when(sessionRepository.findByIdOptional(10L)).thenReturn(Optional.of(session));
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speakerEntity));
+        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speaker));
         Optional<Session> result = sessionService.addSpeakerToSession(10L, 1L);
         assertTrue(result.isPresent());
         assertEquals(1, result.get().speakerEntities.size());
-        assertEquals(speakerEntity, result.get().speakerEntities.get(0));
+        assertEquals(speaker, result.get().speakerEntities.get(0));
     }
 
     @Test
     void testRemoveSpeakerFromSession() {
-        session.speakerEntities.add(speakerEntity);
+        session.speakerEntities.add(speaker);
         when(sessionRepository.findByIdOptional(10L)).thenReturn(Optional.of(session));
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speakerEntity));
+        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speaker));
         Optional<Session> result = sessionService.removeSpeakerFromSession(10L, 1L);
         assertTrue(result.isPresent());
         assertEquals(0, result.get().speakerEntities.size());

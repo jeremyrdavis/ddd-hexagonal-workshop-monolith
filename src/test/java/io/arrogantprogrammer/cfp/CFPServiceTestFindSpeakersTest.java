@@ -1,7 +1,7 @@
 package io.arrogantprogrammer.cfp;
 
 import io.arrogantprogrammer.cfp.domain.services.CFPService;
-import io.arrogantprogrammer.cfp.persistence.Speaker;
+import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
 import io.arrogantprogrammer.cfp.persistence.SpeakerRepository;
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
@@ -36,7 +36,7 @@ public class CFPServiceTestFindSpeakersTest {
     @BeforeEach
     void setUp() {
         Mockito.when(speakerRepository.findByIdOptional(Mockito.any())).thenReturn(
-               Optional.of(new Speaker(
+               Optional.of(new SpeakerEntity(
                                 name,
                                 email,
                                 bio,
@@ -59,6 +59,6 @@ public class CFPServiceTestFindSpeakersTest {
         assertEquals(bio, speakerDTO.bio());
         assertEquals(company, speakerDTO.company());
         assertEquals(title, speakerDTO.title());
-        assertEquals(photoUrl, speakerDTO.photoUrl());
+        assertEquals(photoUrl, speakerDTO.headshot());
     }
 }

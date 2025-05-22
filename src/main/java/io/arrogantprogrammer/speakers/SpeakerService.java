@@ -17,29 +17,29 @@ public class SpeakerService {
     @Inject
     SocialMediaRepository socialMediaRepository;
 
-    public List<SpeakerEntity> getAllSpeakers() {
+    public List<Speaker> getAllSpeakers() {
         return speakerRepository.listAll();
     }
 
-    public Optional<SpeakerEntity> getSpeaker(Long id) {
+    public Optional<Speaker> getSpeaker(Long id) {
         return speakerRepository.findByIdOptional(id);
     }
 
     @Transactional
-    public SpeakerEntity createSpeaker(SpeakerEntity speakerEntity) {
-        speakerRepository.persist(speakerEntity);
-        return speakerEntity;
+    public Speaker createSpeaker(Speaker speaker) {
+        speakerRepository.persist(speaker);
+        return speaker;
     }
 
     @Transactional
-    public Optional<SpeakerEntity> updateSpeaker(Long id, SpeakerEntity speakerEntity) {
-        Optional<SpeakerEntity> existing = speakerRepository.findByIdOptional(id);
+    public Optional<Speaker> updateSpeaker(Long id, Speaker speaker) {
+        Optional<Speaker> existing = speakerRepository.findByIdOptional(id);
         if(existing.isPresent()) {
-            existing.get().name = speakerEntity.name;
-            existing.get().title = speakerEntity.title;
-            existing.get().company = speakerEntity.company;
-            existing.get().bio = speakerEntity.bio;
-            existing.get().headshot = speakerEntity.headshot;
+            existing.get().name = speaker.name;
+            existing.get().title = speaker.title;
+            existing.get().company = speaker.company;
+            existing.get().bio = speaker.bio;
+            existing.get().headshot = speaker.headshot;
             Log.debugf("Speaker updated: %s", existing.get());
             return existing;
         } else {
@@ -65,10 +65,10 @@ public class SpeakerService {
     }
 
     @Transactional
-    public Optional<SpeakerEntity> addSocialMedia(Long id, SocialMedia socialMedia) {
+    public Optional<Speaker> addSocialMedia(Long id, SocialMedia socialMedia) {
         return speakerRepository.findByIdOptional(id)
                 .map(speaker -> {
-                    socialMedia.speakerEntity = speaker;
+                    socialMedia.speaker = speaker;
                     speaker.socialMedia.add(socialMedia);
                     socialMediaRepository.persist(socialMedia);
                     return speaker;
@@ -76,7 +76,7 @@ public class SpeakerService {
     }
 
     @Transactional
-    public Optional<SpeakerEntity> removeSocialMedia(Long id, Long socialId) {
+    public Optional<Speaker> removeSocialMedia(Long id, Long socialId) {
         return speakerRepository.findByIdOptional(id)
                 .map(speaker -> {
                     boolean removed = speaker.socialMedia.removeIf(sm -> sm.id.equals(socialId));

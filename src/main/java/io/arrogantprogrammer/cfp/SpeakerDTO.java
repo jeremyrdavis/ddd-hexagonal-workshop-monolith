@@ -23,5 +23,5 @@ public record SpeakerDTO(
 
     String title,
 
-    String photoUrl
+    String headshot
 ) {}

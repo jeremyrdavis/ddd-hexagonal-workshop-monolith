@@ -1,6 +1,6 @@
 package io.arrogantprogrammer.cfp;
 
-import io.arrogantprogrammer.cfp.persistence.Speaker;
+import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
 import jakarta.persistence.*;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ConferenceSession {
         joinColumns = @JoinColumn(name = "session_id"),
         inverseJoinColumns = @JoinColumn(name = "speaker_id")
     )
-    private List<Speaker> speakers = new ArrayList<>();
+    private List<SpeakerEntity> speakerEntities = new ArrayList<>();
     
     /**
      * Required by JPA
@@ -122,8 +122,8 @@ public class ConferenceSession {
      * 
      * @return the list of speakers
      */
-    public List<Speaker> getSpeakers() {
-        return new ArrayList<>(speakers);
+    public List<SpeakerEntity> getSpeakers() {
+        return new ArrayList<>(speakerEntities);
     }
     
     /**
@@ -174,26 +174,26 @@ public class ConferenceSession {
     /**
      * Adds a speaker to the session.
      * 
-     * @param speaker the speaker to add
+     * @param speakerEntity the speaker to add
      * @return true if the speaker was added, false if the speaker was already in the list
      */
-    public boolean addSpeaker(Speaker speaker) {
-        Objects.requireNonNull(speaker, "Speaker cannot be null");
-        if (speakers.contains(speaker)) {
+    public boolean addSpeaker(SpeakerEntity speakerEntity) {
+        Objects.requireNonNull(speakerEntity, "Speaker cannot be null");
+        if (speakerEntities.contains(speakerEntity)) {
             return false;
         }
-        return speakers.add(speaker);
+        return speakerEntities.add(speakerEntity);
     }
     
     /**
      * Removes a speaker from the session.
      * 
-     * @param speaker the speaker to remove
+     * @param speakerEntity the speaker to remove
      * @return true if the speaker was removed, false if the speaker was not in the list
      */
-    public boolean removeSpeaker(Speaker speaker) {
-        Objects.requireNonNull(speaker, "Speaker cannot be null");
-        return speakers.remove(speaker);
+    public boolean removeSpeaker(SpeakerEntity speakerEntity) {
+        Objects.requireNonNull(speakerEntity, "Speaker cannot be null");
+        return speakerEntities.remove(speakerEntity);
     }
     
     /**
@@ -238,7 +238,7 @@ public class ConferenceSession {
                 ", type=" + sessionType +
                 ", level=" + sessionLevel +
                 ", status=" + status +
-                ", speakers=" + speakers.size() +
+                ", speakers=" + speakerEntities.size() +
                 '}';
     }
     

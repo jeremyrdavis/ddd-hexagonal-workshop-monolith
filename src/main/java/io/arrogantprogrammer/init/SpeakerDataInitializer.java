@@ -1,6 +1,6 @@
 package io.arrogantprogrammer.init;
 
-import io.arrogantprogrammer.speakers.SpeakerEntity;
+import io.arrogantprogrammer.speakers.Speaker;
 import io.arrogantprogrammer.speakers.SpeakerRepository;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -23,7 +23,7 @@ public class SpeakerDataInitializer implements DataInitializer {
             return;
         }
 
-        List<SpeakerEntity> speakerEntities = Arrays.asList(
+        List<Speaker> speakerEntities = Arrays.asList(
             createSpeaker("Sarah Chen", "CTO at TechVision", 
                 "Leading AI initiatives and cloud architecture", 
                 "https://randomuser.me/api/portraits/women/1.jpg",
@@ -159,14 +159,14 @@ public class SpeakerDataInitializer implements DataInitializer {
         return 1;
     }
 
-    private SpeakerEntity createSpeaker(String name, String title, String bio,
-                                        String headshotUrl, String twitterHandle, String email) {
-        SpeakerEntity speakerEntity = new SpeakerEntity();
-        speakerEntity.name = name;
-        speakerEntity.title = title;
-        speakerEntity.bio = bio;
-        speakerEntity.headshot = headshotUrl;
-        speakerEntity.company = title.split(" at ")[1];
-        return speakerEntity;
+    private Speaker createSpeaker(String name, String title, String bio,
+                                  String headshotUrl, String twitterHandle, String email) {
+        Speaker speaker = new Speaker();
+        speaker.name = name;
+        speaker.title = title;
+        speaker.bio = bio;
+        speaker.headshot = headshotUrl;
+        speaker.company = title.split(" at ")[1];
+        return speaker;
     }
 } 

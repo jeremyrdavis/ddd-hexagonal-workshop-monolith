@@ -2,7 +2,7 @@ package io.arrogantprogrammer.agenda;
 
 import io.arrogantprogrammer.sessions.Session;
 import io.arrogantprogrammer.sessions.SessionRepository;
-import io.arrogantprogrammer.speakers.SpeakerEntity;
+import io.arrogantprogrammer.speakers.Speaker;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusMock;
@@ -36,26 +36,26 @@ public class AgendaServiceTest {
     AgendaService agendaService;
 
     Session session1, session2, session3, session4;
-    SpeakerEntity speakerEntity1, speakerEntity2;
+    Speaker speaker1, speaker2;
 
     @BeforeEach
     void setUp() {
         // setup speakers
-        speakerEntity1 = new SpeakerEntity();
-        speakerEntity1.name = "Alice";
-        speakerEntity1.title = "Engineer";
-        speakerEntity1.company = "Acme";
-        speakerEntity2 = new SpeakerEntity();
-        speakerEntity2.name = "Bob";
-        speakerEntity2.title = "CTO";
-        speakerEntity2.company = "Beta";
+        speaker1 = new Speaker();
+        speaker1.name = "Alice";
+        speaker1.title = "Engineer";
+        speaker1.company = "Acme";
+        speaker2 = new Speaker();
+        speaker2.name = "Bob";
+        speaker2.title = "CTO";
+        speaker2.company = "Beta";
         session1 = new Session();
         session1.id = 1L;
         session1.title = "Keynote: Opening";
         session1.startTime = LocalDateTime.of(2025, 5, 14, 9, 0);
         session1.endTime = LocalDateTime.of(2025, 5, 14, 10, 0);
         session1.room = "Main";
-        session1.speakerEntities = List.of(speakerEntity1);
+        session1.speakerEntities = List.of(speaker1);
         session2 = new Session();
         session2.id = 2L;
         session2.title = "Break";
@@ -69,7 +69,7 @@ public class AgendaServiceTest {
         session3.startTime = LocalDateTime.of(2025, 5, 14, 10, 30);
         session3.endTime = LocalDateTime.of(2025, 5, 14, 11, 30);
         session3.room = "Track 1";
-        session3.speakerEntities = List.of(speakerEntity2);
+        session3.speakerEntities = List.of(speaker2);
         session4 = new Session();
         session4.id = 4L;
         session4.title = "More DDD!";

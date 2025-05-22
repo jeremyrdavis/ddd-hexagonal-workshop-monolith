@@ -31,18 +31,18 @@ public class SpeakerServiceTest {
 
     @BeforeEach
     public void setUp() {
-        SpeakerEntity speakerEntity = createTestSpeaker();
-        List<SpeakerEntity> singleSpeakerEntityList = List.of(speakerEntity);
-        Mockito.when(speakerRepository.listAll()).thenReturn(singleSpeakerEntityList);
-        Optional<SpeakerEntity> optionalSpeaker = Optional.of(speakerEntity);
+        Speaker speaker = createTestSpeaker();
+        List<Speaker> singleSpeakerList = List.of(speaker);
+        Mockito.when(speakerRepository.listAll()).thenReturn(singleSpeakerList);
+        Optional<Speaker> optionalSpeaker = Optional.of(speaker);
         Mockito.when(speakerRepository.findByIdOptional(1L)).thenReturn(optionalSpeaker);
-        Optional<SpeakerEntity> emptySpeaker = Optional.empty();
+        Optional<Speaker> emptySpeaker = Optional.empty();
         Mockito.when(speakerRepository.findByIdOptional(2L)).thenReturn(emptySpeaker);
         doAnswer(invocation -> {
-            SpeakerEntity s = invocation.getArgument(0);
+            Speaker s = invocation.getArgument(0);
             return s;
-        }).when(speakerRepository).persist(any(SpeakerEntity.class));
-        SpeakerEntity existing = createTestSpeaker();
+        }).when(speakerRepository).persist(any(Speaker.class));
+        Speaker existing = createTestSpeaker();
         existing.id = 3L;
         doAnswer(invocation -> {
             return Optional.of(existing);
@@ -57,37 +57,37 @@ public class SpeakerServiceTest {
 
     @Test
     void testGetAllSpeakers() {
-        List<SpeakerEntity> result = service.getAllSpeakers();
+        List<Speaker> result = service.getAllSpeakers();
         assertEquals(1, result.size());
     }
 
     @Test
     void testGetSpeaker() {
-        Optional<SpeakerEntity> result = service.getSpeaker(1L);
+        Optional<Speaker> result = service.getSpeaker(1L);
         assertTrue(result.isPresent());
         assertEquals("Test Speaker", result.get().name);
     }
 
     @Test
     void testGetSpeakerNotFound() {
-        Optional<SpeakerEntity> result = service.getSpeaker(2L);
+        Optional<Speaker> result = service.getSpeaker(2L);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void testCreateSpeaker() {
-        SpeakerEntity speakerEntity = createTestSpeaker();
-        SpeakerEntity result = service.createSpeaker(speakerEntity);
-        assertEquals(speakerEntity, result);
+        Speaker speaker = createTestSpeaker();
+        Speaker result = service.createSpeaker(speaker);
+        assertEquals(speaker, result);
     }
 
     @Test
     void testUpdateSpeaker() {
-        SpeakerEntity updated = createTestSpeaker();
+        Speaker updated = createTestSpeaker();
         updated.id = 3L;
         updated.name = "Updated Name";
 
-        Optional<SpeakerEntity> result = service.updateSpeaker(3L, updated);
+        Optional<Speaker> result = service.updateSpeaker(3L, updated);
 
         assertTrue(result.isPresent());
         assertEquals(updated.name, result.get().name);
@@ -95,7 +95,7 @@ public class SpeakerServiceTest {
 
     @Test
     void testUpdateSpeakerNotFound() {
-        Optional<SpeakerEntity> result = service.updateSpeaker(2L, createTestSpeaker());
+        Optional<Speaker> result = service.updateSpeaker(2L, createTestSpeaker());
         assertTrue(result.isEmpty());
     }
 
@@ -115,17 +115,17 @@ public class SpeakerServiceTest {
 
     @Test
     void testAddSocialMedia() {
-        SpeakerEntity speakerEntity = createTestSpeaker();
+        Speaker speaker = createTestSpeaker();
         SocialMedia socialMedia = new SocialMedia();
         socialMedia.platform = "Twitter";
         socialMedia.handle = "@test";
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speakerEntity));
+        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speaker));
         doAnswer(invocation -> {
             SocialMedia sm = invocation.getArgument(0);
             return sm;
         }).when(socialMediaRepository).persist(any(SocialMedia.class));
 
-        Optional<SpeakerEntity> result = service.addSocialMedia(1L, socialMedia);
+        Optional<Speaker> result = service.addSocialMedia(1L, socialMedia);
 
         assertTrue(result.isPresent());
         assertEquals(1, result.get().socialMedia.size());
@@ -137,20 +137,20 @@ public class SpeakerServiceTest {
         SocialMedia socialMedia = new SocialMedia();
         when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.empty());
 
-        Optional<SpeakerEntity> result = service.addSocialMedia(1L, socialMedia);
+        Optional<Speaker> result = service.addSocialMedia(1L, socialMedia);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
     void testRemoveSocialMedia() {
-        SpeakerEntity speakerEntity = createTestSpeaker();
+        Speaker speaker = createTestSpeaker();
         SocialMedia socialMedia = new SocialMedia();
         socialMedia.id = 1L;
-        speakerEntity.socialMedia.add(socialMedia);
-        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speakerEntity));
+        speaker.socialMedia.add(socialMedia);
+        when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.of(speaker));
 
-        Optional<SpeakerEntity> result = service.removeSocialMedia(1L, 1L);
+        Optional<Speaker> result = service.removeSocialMedia(1L, 1L);
 
         assertTrue(result.isPresent());
         assertTrue(result.get().socialMedia.isEmpty());
@@ -160,17 +160,17 @@ public class SpeakerServiceTest {
     void testRemoveSocialMediaFromNonExistentSpeaker() {
         when(speakerRepository.findByIdOptional(1L)).thenReturn(Optional.empty());
 
-        Optional<SpeakerEntity> result = service.removeSocialMedia(1L, 1L);
+        Optional<Speaker> result = service.removeSocialMedia(1L, 1L);
 
         assertTrue(result.isEmpty());
     }
 
-    private SpeakerEntity createTestSpeaker() {
-        SpeakerEntity speakerEntity = new SpeakerEntity();
-        speakerEntity.name = "Test Speaker";
-        speakerEntity.bio = "Test Bio";
-        speakerEntity.headshot = "test.jpg";
-        speakerEntity.socialMedia = new ArrayList<>();
-        return speakerEntity;
+    private Speaker createTestSpeaker() {
+        Speaker speaker = new Speaker();
+        speaker.name = "Test Speaker";
+        speaker.bio = "Test Bio";
+        speaker.headshot = "test.jpg";
+        speaker.socialMedia = new ArrayList<>();
+        return speaker;
     }
 } 

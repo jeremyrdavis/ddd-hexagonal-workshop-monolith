@@ -1,7 +1,7 @@
 package io.arrogantprogrammer.cfp;
 
 import io.arrogantprogrammer.cfp.domain.services.CFPService;
-import io.arrogantprogrammer.cfp.persistence.Speaker;
+import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
 import io.arrogantprogrammer.cfp.persistence.SpeakerRepository;
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
-public class CFPUpdateSpeakerTest {
+public class CFPUpdateSpeakerEntityTest {
 
     @Inject
     CFPService cfpService;
@@ -36,7 +36,7 @@ public class CFPUpdateSpeakerTest {
     @BeforeEach
     void  setup() {
         Mockito.when(speakerRepository.findByIdOptional(Mockito.any())).thenReturn(
-        Optional.of(new Speaker(
+        Optional.of(new SpeakerEntity(
                 name,
                 email,
                 bio,
@@ -57,13 +57,13 @@ public class CFPUpdateSpeakerTest {
                 "Ring Bearer",
                 "http://theshire.uk/frodo.jpg");
         Mockito.when(speakerRepository.findByIdOptional(Mockito.any())).thenReturn(
-                Optional.of(new Speaker(
+                Optional.of(new SpeakerEntity(
                         updatedSpeakerDTO.name(),
                         updatedSpeakerDTO.email(),
                         updatedSpeakerDTO.bio(),
                         updatedSpeakerDTO.company(),
                         updatedSpeakerDTO.title(),
-                        updatedSpeakerDTO.photoUrl()
+                        updatedSpeakerDTO.headshot()
                 )));
 
         SpeakerDTO result = cfpService.updateSpeaker(237L, updatedSpeakerDTO).get();
@@ -71,7 +71,7 @@ public class CFPUpdateSpeakerTest {
         assertEquals(updatedSpeakerDTO.bio(), result.bio());
         assertEquals(updatedSpeakerDTO.company(), result.company());
         assertEquals(updatedSpeakerDTO.title(), result.title());
-        assertEquals(updatedSpeakerDTO.photoUrl(), result.photoUrl());
+        assertEquals(updatedSpeakerDTO.headshot(), result.headshot());
         assertEquals(updatedSpeakerDTO.name(), result.name());
         assertEquals(updatedSpeakerDTO.email(), result.email());
     }
