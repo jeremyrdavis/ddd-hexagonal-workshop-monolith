@@ -22,7 +22,7 @@ public class CFPService {
     ConferenceSessionRepository conferenceSessionRepository;
 
     @Transactional
-    SpeakerDTO registerSpeaker(SpeakerDTO speakerDTO) {
+    public SpeakerDTO registerSpeaker(SpeakerDTO speakerDTO) {
         Speaker speaker = Speaker.create(speakerDTO.name(),speakerDTO.email(), speakerDTO.bio(), speakerDTO.company(), speakerDTO.title(), speakerDTO.photoUrl());
         speakerRepository.persist(speaker);
         return new SpeakerDTO(
@@ -35,11 +35,11 @@ public class CFPService {
         );
     }
 
-    List<SpeakerDTO> getAllSpeakers() {
+    public List<SpeakerDTO> getAllSpeakers() {
         return null;
     }
 
-    Optional<SpeakerDTO> getSpeaker(Long id) {
+    public Optional<SpeakerDTO> getSpeaker(Long id) {
         return speakerRepository.findByIdOptional(id)
                 .map(speaker -> new SpeakerDTO(
                         speaker.getName(),
@@ -52,7 +52,7 @@ public class CFPService {
     }
 
     @Transactional
-    Optional<SpeakerDTO> updateSpeaker(long l, SpeakerDTO updatedSpeakerDTO) {
+    public Optional<SpeakerDTO> updateSpeaker(long l, SpeakerDTO updatedSpeakerDTO) {
         Speaker speaker = speakerRepository.findByIdOptional(l).get();
         if(speaker != null) {
             speaker.updateName(updatedSpeakerDTO.name());
@@ -73,7 +73,7 @@ public class CFPService {
         return Optional.empty();
     }
 
-    boolean deleteSpeaker(final Long id) {
+    public boolean deleteSpeaker(final Long id) {
         if (speakerRepository.deleteById(id)) {
             return true;
         }
@@ -118,7 +118,7 @@ public class CFPService {
         }).collect(Collectors.toList());
     }
 
-    List<ConferenceSessionDTO> getAllConferenceSessions() {
+    public List<ConferenceSessionDTO> getAllConferenceSessions() {
         return conferenceSessionRepository.streamAll().map(conferenceSession -> {
             return  new ConferenceSessionDTO(
                     conferenceSession.getId(),
@@ -145,7 +145,7 @@ public class CFPService {
         }).collect(Collectors.toList());
     }
 
-    Optional<ConferenceSessionDTO> getSession(Long id) {
+    public Optional<ConferenceSessionDTO> getSession(Long id) {
         return conferenceSessionRepository.findByIdOptional(id)
                 .map(session -> new ConferenceSessionDTO(
                         session.getId(),
@@ -171,7 +171,7 @@ public class CFPService {
     }
 
 @Transactional
-Optional<ConferenceSessionDTO> updateSession(long id, ConferenceSessionDTO updatedSession) {
+public Optional<ConferenceSessionDTO> updateSession(long id, ConferenceSessionDTO updatedSession) {
     ConferenceSession existingSession = conferenceSessionRepository.findById(id);
     if (existingSession != null) {
         existingSession.updateSessionAbstract(new SessionAbstract(updatedSession.title(), updatedSession.summary(), updatedSession.outline(), updatedSession.learningObjectives(), updatedSession.targetAudience(), updatedSession.prerequisites()));
@@ -207,7 +207,7 @@ Optional<ConferenceSessionDTO> updateSession(long id, ConferenceSessionDTO updat
     return Optional.empty();
 }
 
-    ConferenceSessionDTO createSession(ConferenceSessionDTO dto) {
+    public ConferenceSessionDTO createSession(ConferenceSessionDTO dto) {
         ConferenceSession session = new ConferenceSession(
                 new SessionAbstract(dto.title(), dto.summary(), dto.outline(), dto.learningObjectives(), dto.targetAudience(), dto.prerequisites()),
                 dto.sessionType(),
@@ -230,7 +230,7 @@ Optional<ConferenceSessionDTO> updateSession(long id, ConferenceSessionDTO updat
         );
     }
 
-    boolean deleteSession(Long id) {
+    public boolean deleteSession(Long id) {
         if (conferenceSessionRepository.deleteById(id)) {
             return true;
         }
