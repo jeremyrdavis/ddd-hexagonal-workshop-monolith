@@ -1,10 +1,8 @@
 package io.arrogantprogrammer.cfp.domain.aggregates;
 
 import io.arrogantprogrammer.cfp.SpeakerDTO;
-import io.arrogantprogrammer.cfp.domain.services.SpeakerRegistrationEvent;
-import io.arrogantprogrammer.cfp.domain.services.SpeakerRegistrationResult;
-import io.arrogantprogrammer.cfp.domain.services.SpeakerUpdateResult;
-import io.arrogantprogrammer.cfp.domain.services.SubmitAbstractCommand;
+import io.arrogantprogrammer.cfp.domain.services.*;
+import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
 import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
 import io.arrogantprogrammer.sharedkernel.events.AbstractSubmittedEvent;
 import io.arrogantprogrammer.sharedkernel.events.SpeakerUpdatedEvent;
@@ -40,11 +38,19 @@ public class Speaker {
         return speakerUpdateResult;
     }
 
-    static AbstractSubmittedEvent submitAbstract(SubmitAbstractCommand submitAbstractCommand) {
+    static SubmitAbstractResult submitAbstract(SpeakerEntity speakerEntity, SubmitAbstractCommand submitAbstractCommand) {
         // Logic to handle the submission of an abstract
-        // This is a placeholder for the actual implementation
-
-        return new AbstractSubmittedEvent(submitAbstractCommand.email(), submitAbstractCommand.sessionAbstractEntity().getTitle());
+        SessionAbstractEntity sessionAbstractEntity = new SessionAbstractEntity(
+            submitAbstractCommand.sessionAbstract().title(),
+            submitAbstractCommand.sessionAbstract().summary(),
+            submitAbstractCommand.sessionAbstract().outline(),
+            submitAbstractCommand.sessionAbstract().learningObjectives(),
+            submitAbstractCommand.sessionAbstract().targetAudience(),
+            submitAbstractCommand.sessionAbstract().prerequisites()
+        );
+        speakerEntity.addAbstract(sessionAbstractEntity);
+        AbstractSubmittedEvent abstractSubmittedEvent = new AbstractSubmittedEvent(submitAbstractCommand.email(), sessionAbstractEntity.getTitle());
+        return new SubmitAbstractResult(speakerEntity, abstractSubmittedEvent);
     }
 
 

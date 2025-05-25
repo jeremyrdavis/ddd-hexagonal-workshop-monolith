@@ -1,7 +1,9 @@
 package io.arrogantprogrammer.cfp.persistence;
 
+import io.arrogantprogrammer.cfp.ConferenceSession;
 import jakarta.persistence.*;
 
+import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -9,6 +11,7 @@ import java.util.Objects;
  * This is a Domain-Driven Design value object.
  */
 @Entity
+@Table(name = "cfp_session_abstracts")
 public class SessionAbstractEntity {
 
     @Id @GeneratedValue
@@ -19,12 +22,19 @@ public class SessionAbstractEntity {
     private String learningObjectives;
     private String targetAudience;
     private String prerequisites;
+    @Enumerated(EnumType.STRING)
+    private ConferenceSession.SessionType sessionType;
+    @Enumerated(EnumType.STRING)
+    private ConferenceSession.SessionLevel sessionLevel;
+    private Duration duration;
+    @Enumerated(EnumType.STRING)
+    private ConferenceSession.SessionStatus status;
+
 
     @ManyToOne
     @JoinColumn(name = "speaker_id", nullable = false)
     private SpeakerEntity speaker;
 
-    
     /**
      * Required by JPA
      */
@@ -53,7 +63,7 @@ public class SessionAbstractEntity {
         this.targetAudience = targetAudience;
         this.prerequisites = prerequisites;
     }
-    
+
     /**
      * Validates that the abstract components are properly formatted.
      * 
@@ -77,6 +87,11 @@ public class SessionAbstractEntity {
         if (summary.length() > 500) {
             throw new IllegalArgumentException("Summary is too long (max 500 characters)");
         }
+    }
+
+
+    public void setSpeaker(SpeakerEntity speaker) {
+        this.speaker = speaker;
     }
     
     /**
@@ -158,4 +173,38 @@ public class SessionAbstractEntity {
                 ", summary='" + summary + '\'' +
                 '}';
     }
+
+    /**
+     * Session type enum.
+     */
+    public enum SessionType {
+        KEYNOTE,
+        TALK,
+        WORKSHOP,
+        PANEL,
+        LIGHTNING_TALK,
+        BOF
+    }
+
+    /**
+     * Session level enum.
+     */
+    public enum SessionLevel {
+        BEGINNER,
+        INTERMEDIATE,
+        ADVANCED,
+        EXPERT
+    }
+
+    /**
+     * Session status enum.
+     */
+    public enum SessionStatus {
+        SUBMITTED,
+        UNDER_REVIEW,
+        ACCEPTED,
+        REJECTED,
+        WITHDRAWN
+    }
+
 }

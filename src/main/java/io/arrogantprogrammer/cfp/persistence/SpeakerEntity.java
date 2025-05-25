@@ -84,8 +84,15 @@ public class SpeakerEntity {
         );
     }
 
+    public void addAbstract(SessionAbstractEntity sessionAbstractEntity) {
+        if (this.sessionAbstracts == null) {
+            this.sessionAbstracts = new ArrayList<>(1);
+        }
+        sessionAbstracts.add(sessionAbstractEntity);
+        sessionAbstractEntity.setSpeaker(this);
+    }
 
-    
+
     /**
      * Gets the speaker's ID.
      * 
@@ -148,7 +155,11 @@ public class SpeakerEntity {
     public String getPhotoUrl() {
         return photoUrl;
     }
-    
+
+    public List<SessionAbstractEntity> getSessionAbstracts() {
+        return sessionAbstracts;
+    }
+
     /**
      * Updates the speaker's email.
      * 
@@ -226,4 +237,5 @@ public class SpeakerEntity {
                 ", title='" + title + '\'' +
                 '}';
     }
+
 }
