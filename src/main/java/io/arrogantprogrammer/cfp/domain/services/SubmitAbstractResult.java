@@ -1,7 +1,13 @@
 package io.arrogantprogrammer.cfp.domain.services;
 
-import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
-import io.arrogantprogrammer.sharedkernel.events.AbstractSubmittedEvent;
+import io.arrogantprogrammer.cfp.domain.aggregates.Speaker;
+import io.arrogantprogrammer.cfp.domain.events.AbstractSubmittedEvent;
 
-public record SubmitAbstractResult(SpeakerEntity speakerEntity, AbstractSubmittedEvent abstractSubmittedEvent) {
+/**
+ * Result object for abstract submission operations.
+ */
+public record SubmitAbstractResult(
+    Speaker speaker,
+    AbstractSubmittedEvent event
+) {
 }
