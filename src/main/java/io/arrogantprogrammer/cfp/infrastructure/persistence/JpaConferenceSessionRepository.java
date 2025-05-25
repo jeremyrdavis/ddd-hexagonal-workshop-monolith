@@ -4,28 +4,26 @@ import io.arrogantprogrammer.cfp.domain.aggregates.ConferenceSession;
 import io.arrogantprogrammer.cfp.domain.aggregates.Speaker;
 import io.arrogantprogrammer.cfp.domain.repositories.ConferenceSessionRepository;
 import io.arrogantprogrammer.cfp.domain.valueobjects.SessionAbstract;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * JPA implementation of the ConferenceSessionRepository interface.
+ * JPA implementation of the ConferenceSessionRepository interface using Panache.
  */
 @ApplicationScoped
-public class JpaConferenceSessionRepository implements ConferenceSessionRepository, PanacheRepository<ConferenceSessionEntity> {
-    
-    @Inject
-    EntityManager entityManager;
+public class JpaConferenceSessionRepository implements ConferenceSessionRepository, PanacheRepositoryBase<ConferenceSessionEntity, Long> {
     
     @Inject
     JpaSpeakerRepository speakerRepository;
     
     @Override
+    @Transactional
     public ConferenceSession save(ConferenceSession session) {
         ConferenceSessionEntity entity = mapToEntity(session);
         if (entity.getId() == null) {
@@ -43,44 +41,56 @@ public class JpaConferenceSessionRepository implements ConferenceSessionReposito
     
     @Override
     public List<ConferenceSession> findBySpeaker(Speaker speaker) {
-        return find("SELECT s FROM ConferenceSessionEntity s JOIN s.speakers sp WHERE sp.id = ?1", speaker.getId()).list().stream()
+        return find("SELECT s FROM ConferenceSessionEntity s JOIN s.speakers sp WHERE sp.id = ?1", speaker.getId())
+                .stream()
                 .map(this::mapToDomain)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<ConferenceSession> findBySpeakerId(Long speakerId) {
-        return find("SELECT s FROM ConferenceSessionEntity s JOIN s.speakers sp WHERE sp.id = ?1", speakerId).list().stream()
+        return find("SELECT s FROM ConferenceSessionEntity s JOIN s.speakers sp WHERE sp.id = ?1", speakerId)
+                .stream()
                 .map(this::mapToDomain)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<ConferenceSession> findByStatus(ConferenceSession.SessionStatus status) {
-        return find("status", status).list().stream()
+        return list("status", status)
+                .stream()
                 .map(this::mapToDomain)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<ConferenceSession> findByType(ConferenceSession.SessionType type) {
-        return find("sessionType", type).list().stream()
+        return list("sessionType", type)
+                .stream()
                 .map(this::mapToDomain)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<ConferenceSession> findByLevel(ConferenceSession.SessionLevel level) {
-        return find("sessionLevel", level).list().stream()
+        return list("sessionLevel", level)
+                .stream()
                 .map(this::mapToDomain)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<ConferenceSession> findAll() {
-        return listAll().stream()
+        return listAll()
+                .stream()
                 .map(this::mapToDomain)
                 .collect(Collectors.toList());
+    }
+    
+    @Override
+    @Transactional
+    public boolean deleteById(Long id) {
+        return deleteById(id);
     }
     
     /**
@@ -93,12 +103,12 @@ public class JpaConferenceSessionRepository implements ConferenceSessionReposito
         ConferenceSessionEntity entity = new ConferenceSessionEntity();
         entity.setId(session.getId());
         entity.setSessionAbstract(new SessionAbstractEntity(
-                session.getSessionAbstract().getTitle(),
-                session.getSessionAbstract().getSummary(),
-                session.getSessionAbstract().getOutline(),
-                session.getSessionAbstract().getLearningObjectives(),
-                session.getSessionAbstract().getTargetAudience(),
-                session.getSessionAbstract().getPrerequisites()
+                session.getSessionAbstract().title(),
+                session.getSessionAbstract().summary(),
+                session.getSessionAbstract().outline(),
+                session.getSessionAbstract().learningObjectives(),
+                session.getSessionAbstract().targetAudience(),
+                session.getSessionAbstract().prerequisites()
         ));
         entity.setSessionType(session.getSessionType());
         entity.setSessionLevel(session.getSessionLevel());
@@ -107,7 +117,8 @@ public class JpaConferenceSessionRepository implements ConferenceSessionReposito
         
         // Map speakers
         List<SpeakerEntity> speakerEntities = session.getSpeakers().stream()
-                .map(speaker -> speakerRepository.findByIdOptional(speaker.getId()).orElseThrow())
+                .map(speaker -> speakerRepository.findByIdOptional(speaker.getId())
+                        .orElseThrow(() -> new IllegalStateException("Speaker not found with ID: " + speaker.getId())))
                 .collect(Collectors.toList());
         entity.setSpeakers(speakerEntities);
         
