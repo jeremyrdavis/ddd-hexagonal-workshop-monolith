@@ -1,9 +1,8 @@
 package io.arrogantprogrammer.cfp.domain.aggregates;
 
-import io.arrogantprogrammer.cfp.SpeakerDTO;
+import io.arrogantprogrammer.cfp.api.dto.SpeakerDTO;
 import io.arrogantprogrammer.cfp.domain.services.*;
-import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
-import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
+import io.arrogantprogrammer.cfp.infrastructure.persistence.SpeakerEntity;
 import io.arrogantprogrammer.sharedkernel.events.AbstractSubmittedEvent;
 import io.arrogantprogrammer.sharedkernel.events.SpeakerUpdatedEvent;
 

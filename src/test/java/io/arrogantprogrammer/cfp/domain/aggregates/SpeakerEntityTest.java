@@ -3,7 +3,7 @@ package io.arrogantprogrammer.cfp.domain.aggregates;
 import io.arrogantprogrammer.cfp.SpeakerDTO;
 import io.arrogantprogrammer.cfp.domain.services.SpeakerRegistrationResult;
 import io.arrogantprogrammer.cfp.domain.services.SpeakerUpdateResult;
-import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
+import io.arrogantprogrammer.cfp.infrastructure.persistence.SpeakerEntity;
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
 import org.junit.jupiter.api.Test;

@@ -3,15 +3,12 @@ package io.arrogantprogrammer.cfp.domain.services;
 import io.arrogantprogrammer.cfp.ConferenceSessionRepository;
 import io.arrogantprogrammer.cfp.SpeakerDTO;
 import io.arrogantprogrammer.cfp.domain.aggregates.Speaker;
-import io.arrogantprogrammer.cfp.persistence.SpeakerRepository;
-import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
-import io.arrogantprogrammer.domain.valueobjects.Email;
-import io.arrogantprogrammer.domain.valueobjects.Name;
+import io.arrogantprogrammer.cfp.infrastructure.persistence.SpeakerRepository;
+import io.arrogantprogrammer.cfp.infrastructure.persistence.SpeakerEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -68,7 +68,7 @@ public class ConferenceSession {
         );
 
         SessionSubmittedEvent event = new SessionSubmittedEvent(
-                sessionAbstract.getTitle(),
+                sessionAbstract.title(),
                 sessionType,
                 sessionLevel,
                 durationMinutes
@@ -259,7 +259,7 @@ public class ConferenceSession {
         }
         this.status = SessionStatus.ACCEPTED;
         this.lastModifiedAt = Instant.now();
-        return new SessionAcceptedEvent(this.id, this.sessionAbstract.getTitle());
+        return new SessionAcceptedEvent(this.id, this.sessionAbstract.title());
     }
 
     /**
@@ -273,7 +273,7 @@ public class ConferenceSession {
         }
         this.status = SessionStatus.REJECTED;
         this.lastModifiedAt = Instant.now();
-        return new SessionRejectedEvent(this.id, this.sessionAbstract.getTitle());
+        return new SessionRejectedEvent(this.id, this.sessionAbstract.title());
     }
 
     /**
@@ -287,7 +287,7 @@ public class ConferenceSession {
         }
         this.status = SessionStatus.WITHDRAWN;
         this.lastModifiedAt = Instant.now();
-        return new SessionWithdrawnEvent(this.id, this.sessionAbstract.getTitle());
+        return new SessionWithdrawnEvent(this.id, this.sessionAbstract.title());
     }
 
     /**
@@ -338,7 +338,7 @@ public class ConferenceSession {
     public String toString() {
         return "ConferenceSession{" +
                 "id=" + id +
-                ", title='" + (sessionAbstract != null ? sessionAbstract.getTitle() : null) + '\'' +
+                ", title='" + (sessionAbstract != null ? sessionAbstract.title() : null) + '\'' +
                 ", type=" + sessionType +
                 ", level=" + sessionLevel +
                 ", status=" + status +

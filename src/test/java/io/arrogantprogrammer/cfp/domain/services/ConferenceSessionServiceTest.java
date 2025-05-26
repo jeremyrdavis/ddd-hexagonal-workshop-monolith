@@ -3,7 +3,6 @@ package io.arrogantprogrammer.cfp.domain.services;
 import io.arrogantprogrammer.cfp.ConferenceSession;
 import io.arrogantprogrammer.cfp.ConferenceSessionDTO;
 import io.arrogantprogrammer.cfp.ConferenceSessionRepository;
-import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusMock;
 import io.quarkus.test.junit.QuarkusTest;

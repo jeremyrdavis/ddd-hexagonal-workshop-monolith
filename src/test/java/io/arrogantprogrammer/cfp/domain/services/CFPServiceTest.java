@@ -2,8 +2,8 @@ package io.arrogantprogrammer.cfp.domain.services;
 
         import io.arrogantprogrammer.cfp.ConferenceSessionRepository;
         import io.arrogantprogrammer.cfp.SpeakerDTO;
-        import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
-        import io.arrogantprogrammer.cfp.persistence.SpeakerRepository;
+        import io.arrogantprogrammer.cfp.infrastructure.persistence.SpeakerEntity;
+        import io.arrogantprogrammer.cfp.infrastructure.persistence.SpeakerRepository;
         import io.arrogantprogrammer.domain.valueobjects.Email;
         import io.arrogantprogrammer.domain.valueobjects.Name;
         import io.quarkus.test.InjectMock;

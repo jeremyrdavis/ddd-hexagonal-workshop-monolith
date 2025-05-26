@@ -3,7 +3,6 @@ package io.arrogantprogrammer.cfp.domain.services;
 import io.arrogantprogrammer.cfp.ConferenceSession;
 import io.arrogantprogrammer.cfp.ConferenceSessionDTO;
 import io.arrogantprogrammer.cfp.ConferenceSessionRepository;
-import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;

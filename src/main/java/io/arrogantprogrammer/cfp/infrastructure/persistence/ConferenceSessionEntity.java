@@ -13,6 +13,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "cfp_sessions")
 public class ConferenceSessionEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -120,7 +121,7 @@ public class ConferenceSessionEntity {
     public String toString() {
         return "ConferenceSessionEntity{" +
                 "id=" + id +
-                ", title='" + (sessionAbstract != null ? sessionAbstract.getTitle() : null) + '\'' +
+                ", title='" + (sessionAbstract != null ? sessionAbstract.title : null) + '\'' +
                 ", type=" + sessionType +
                 ", level=" + sessionLevel +
                 ", status=" + status +

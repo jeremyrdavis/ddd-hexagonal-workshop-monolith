@@ -3,11 +3,9 @@ package io.arrogantprogrammer.cfp.domain.aggregates;
 import io.arrogantprogrammer.cfp.domain.services.SubmitAbstractCommand;
 import io.arrogantprogrammer.cfp.domain.services.SubmitAbstractResult;
 import io.arrogantprogrammer.cfp.domain.valueobjects.SessionAbstract;
-import io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity;
-import io.arrogantprogrammer.cfp.persistence.SpeakerEntity;
+import io.arrogantprogrammer.cfp.infrastructure.persistence.SpeakerEntity;
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
-import io.arrogantprogrammer.sharedkernel.events.AbstractSubmittedEvent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

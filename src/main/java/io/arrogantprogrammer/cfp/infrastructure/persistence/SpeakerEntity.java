@@ -1,4 +1,4 @@
-package io.arrogantprogrammer.cfp.persistence;
+package io.arrogantprogrammer.cfp.infrastructure.persistence;
 
 import io.arrogantprogrammer.domain.valueobjects.Email;
 import io.arrogantprogrammer.domain.valueobjects.Name;
@@ -34,7 +34,7 @@ public class SpeakerEntity {
     private String photoUrl;
 
     @OneToMany(mappedBy = "speaker", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SessionAbstractEntity> sessionAbstracts = new ArrayList<>();
+    private List<io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity> sessionAbstracts = new ArrayList<>();
     /**
      * Required by JPA
      */
@@ -84,7 +84,7 @@ public class SpeakerEntity {
         );
     }
 
-    public void addAbstract(SessionAbstractEntity sessionAbstractEntity) {
+    public void addAbstract(io.arrogantprogrammer.cfp.persistence.SessionAbstractEntity sessionAbstractEntity) {
         if (this.sessionAbstracts == null) {
             this.sessionAbstracts = new ArrayList<>(1);
         }
